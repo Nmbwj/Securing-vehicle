@@ -1,0 +1,4 @@
+## change the data inside in option 'd' or -d
+
+curl -X POST https://www.toptal.com/developers/postbin/1718196833782-4185413909144 -H "Content-Type: application/json" -d '{"idnum": "325", "name": "naol"}'
+
