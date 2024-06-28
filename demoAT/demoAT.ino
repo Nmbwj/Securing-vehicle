@@ -1,15 +1,16 @@
 String url = "\"www.sim.com\"";
 String mozila= "\"www.mozilla.org/en-US\"";
 String testurl = "\"28b0-196-190-62-68.ngrok-free.app/index.html?inputText=naolisgoing\"";
-String urlInternet ="\"www.toptal.com/developers/postbin/1719491840801-6199923341628?hello=world \"";
+String urlInternet ="\"www.toptal.com/developers/postbin/1719553979249-5822017623577 \"";
+String urlsim = "\"www.sim.com/en/Search/index.aspx?key=sim\"";
 void setup() {
   // Setup for Serial communication
   Serial.begin(115200);
   Serial3.begin(9600);
   
-  // dnsCheckUp(url);
-  //dnsCheckUp(url);
-  sendHttps(urlInternet);
+  sendHttp(urlsim);
+  //sendHttps(urlInternet);
+  //sendPostHttp(urlInternet);
 
 }
 
@@ -69,7 +70,7 @@ void sendHttp(String url){
   delay(10000);
   sendATCommand("AT+HTTPACTION=0");
   delay(10000);
-  sendATCommand("AT+HTTPREAD");
+  sendATCommand("AT+HTTPREAD=0,25525");
   delay(10000);
   sendATCommand("AT+HTTPTERM");
   delay(1000);
@@ -128,7 +129,13 @@ void sendHttps(String url){
   sendATCommand("AT+SAPBR=1,1"); // APN configuration
   delay(1000);
   sendATCommand("AT+SAPBR=2,1"); // GPRS connectivity.
-  delay(1000);
+  delay(10000);
+  sendATCommand("AT+HTTPSSL?");
+  delay(10000);
+  sendATCommand("AT+HTTPSSL=0");
+  delay(10000);
+  sendATCommand("AT+CIPSSL=1");
+  delay(10000);
   sendATCommand("AT+CGATT?");
   delay(10000);
   // END OF BARRIER
