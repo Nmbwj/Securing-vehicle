@@ -1,6 +1,7 @@
 String url = "\"www.sim.com\"";
 String mozila= "\"www.mozilla.org/en-US\"";
 String testurl = "\"28b0-196-190-62-68.ngrok-free.app/index.html?inputText=naolisgoing\"";
+String urlInternet ="\"www.toptal.com/developers/postbin/1719491840801-6199923341628?hello=world \"";
 void setup() {
   // Setup for Serial communication
   Serial.begin(115200);
@@ -8,6 +9,7 @@ void setup() {
   
   // dnsCheckUp(url);
   //dnsCheckUp(url);
+  sendHttps(urlInternet);
 
 }
 
@@ -128,22 +130,22 @@ void sendHttps(String url){
   sendATCommand("AT+SAPBR=2,1"); // GPRS connectivity.
   delay(1000);
   sendATCommand("AT+CGATT?");
-  delay(1000);
+  delay(10000);
   // END OF BARRIER
 
   //START OF HTTPS
   sendATCommand("AT+HTTPSSL=1");
-  delay(1000);
+  delay(10000);
   sendATCommand("AT+HTTPPARA =\"CID\",1");
-  delay(1000);
+  delay(10000);
   sendATCommand("AT+HTTPPARA=\"URL\","+ url +"");
-  delay(1000);
+  delay(10000);
   sendATCommand("AT+HTTPACTION=0");
-  delay(1000);
+  delay(10000);
   sendATCommand("AT+HTTPREAD");
-  delay(1000);
+  delay(10000);
   sendATCommand("AT+HTTPTERM");
-  delay(1000);
+  delay(10000);
 
   //CLOSE GPRS CONTEX
   sendATCommand("AT+SAPBR =0,1");
@@ -162,3 +164,4 @@ void updateSerial()
     Serial.write(Serial3.read()); // Forward data to Serial port
   }
 }
+
