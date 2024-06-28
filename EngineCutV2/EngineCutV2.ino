@@ -8,7 +8,8 @@
 MFRC522 nfc(SAD, RST);
 Adafruit_Fingerprint_Due finger = Adafruit_Fingerprint_Due();
 
-byte samuelTag[5] = {0x33, 0x8B, 0x91, 0xFC};
+byte samuelTag[5] = {0x88, 0x4, 0x16, 0xDA};
+byte mohamedTag[5] = {0x5D, 0xE5, 0xA2, 0x82};
 bool rfidVerified = false;
 bool fingerprintVerified = false;
 String senderNumber = "";
@@ -106,7 +107,7 @@ void updateSerialSmsRecive()
 void processMessage(String message, String sender)
 {
   // Check if the sender is the authorized number
-  if (sender == "+251933660705")
+  if (sender == "+251905421795")
   {
     // Convert message to lowercase for case-insensitive comparison
     message.toLowerCase();
@@ -116,14 +117,21 @@ void processMessage(String message, String sender)
     {
       //digitalWrite(8, HIGH); // Set pin 2 HIGH
       digitalWrite(8, LOW);
-      delay(3500);
-      digitalWrite(8, HIGH);
+      //delay(3500);
+      //digitalWrite(8, HIGH);
       sendATCommand("AT+CMGF=1"); 
-      sendATCommand("AT+CMGS=\"+251933660705\""); // Replace with recipient's phone number
-      Serial3.print("Engine is Stoped!."); // Message content
+      sendATCommand("AT+CMGS=\"+251905421795\""); // Replace with recipient's phone number
+      Serial3.print("Engine is Stoped!. \n If you want give access grand send \"engineon\" "); // Message content
       delay(100);
       Serial3.write(26);
 
+    }else if (message.indexOf("engineon") != -1){
+      digitalWrite(8, HIGH);
+      sendATCommand("AT+CMGF=1"); 
+      sendATCommand("AT+CMGS=\"+251905421795\""); // Replace with recipient's phone number
+      Serial3.print("Engine is on!."); // Message content
+      delay(100);
+      Serial3.write(26);
     }
   }
 }
@@ -143,12 +151,25 @@ void checkRFID() {
       Serial.println("Tag verified as Samuel's RFID.");
       rfidVerified = true;
       digitalWrite(7, LOW);
-      delay(3500);
+      delay(1000);
       digitalWrite(7, HIGH);
     
     sendATCommand("AT+CMGF=1"); 
-    sendATCommand("AT+CMGS=\"+251933660705\""); // Replace with recipient's phone number
-  Serial3.print("Samuel with RFID : 33 8B 91 FC Started the car."); // Message content
+    sendATCommand("AT+CMGS=\"+251905421795\""); // Replace with recipient's phone number
+  Serial3.print("Mohamed with RFID : 33 8B 91 FC Started the car."); // Message content
+  delay(100);
+  Serial3.write(26); // ASCII code of CTRL+Z to send the SMS
+  delay(1000); 
+    }else if(memcmp(serial, mohamedTag, 4) == 0) {
+      Serial.println("Tag verified as Mohamed's RFID.");
+      rfidVerified = true;
+      digitalWrite(7, LOW);
+      delay(1000);
+      digitalWrite(7, HIGH);
+    
+    sendATCommand("AT+CMGF=1"); 
+    sendATCommand("AT+CMGS=\"+251905421795\""); // Replace with recipient's phone number
+  Serial3.print("Mohamed with RFID : 33 8B 91 FC Started the car."); // Message content
   delay(100);
   Serial3.write(26); // ASCII code of CTRL+Z to send the SMS
   delay(1000); 
@@ -159,7 +180,7 @@ void checkRFID() {
     delay(100);
     digitalWrite(3, LOW);
     sendATCommand("AT+CMGF=1"); 
-    sendATCommand("AT+CMGS=\"+251933660705\""); // Replace with recipient's phone number
+    sendATCommand("AT+CMGS=\"+251905421795\""); // Replace with recipient's phone number
   Serial3.print("unknown person with RFID trys to start the car."); // Message content
   delay(100);
   Serial3.write(26); // ASCII code of CTRL+Z to send the SMS
@@ -192,7 +213,7 @@ int getFingerprintIDez() {
     delay(100);
     digitalWrite(3, LOW);
     sendATCommand("AT+CMGF=1"); 
-    sendATCommand("AT+CMGS=\"+251933660705\""); // Replace with recipient's phone number
+    sendATCommand("AT+CMGS=\"+251905421795\""); // Replace with recipient's phone number
     Serial3.print("unknown person with fingerprint trys to start the car."); // Message content
     delay(100);
     Serial3.write(26); // ASCII code of CTRL+Z to send the SMS
@@ -201,11 +222,17 @@ int getFingerprintIDez() {
   } else {
     Serial.println("Found a print match!");
     digitalWrite(7, LOW);
-    delay(3500);
+    delay(1000);
     digitalWrite(7, HIGH);
     sendATCommand("AT+CMGF=1"); 
-    sendATCommand("AT+CMGS=\"+251933660705\""); // Replace with recipient's phone number
-    Serial3.print("samuel with fingerprint started the car."); // Message content
+    sendATCommand("AT+CMGS=\"+251905421795\""); // Replace with recipient's phone number
+    if(finger.fingerID == 1 || finger.fingerID == 2){
+      Serial3.print("Mohamed with fingerprint started the car."); // Message content
+    }else if(finger.fingerID == 3 || finger.fingerID == 4){
+      Serial3.print("Nati with fingerprint started the car."); 
+    }else if(finger.fingerID == 5 || finger.fingerID == 6){
+      Serial3.print("Naol with fingerprint started the car.");
+    }
     delay(100);
     Serial3.write(26); // ASCII code of CTRL+Z to send the SMS
     delay(1000); 
