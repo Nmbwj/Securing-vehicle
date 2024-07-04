@@ -76,14 +76,6 @@ void setupFTP(String url, String username, String password){
   
   
 }
-
-
-void sendATCommand(String cmd)
-{
-  Serial3.println(cmd);
-  delay(1000); // Wait for the command to be processed
-  updateSerial();
-}
 void sendUAT(String cmd, String data){
   int i =0;
   while(cmd.charAt(i)){
@@ -98,6 +90,14 @@ void sendUAT(String cmd, String data){
   updateSerial();
 
 
+}
+
+
+void sendATCommand(String cmd)
+{
+  Serial3.println(cmd);
+  delay(1000); // Wait for the command to be processed
+  updateSerial();
 }
 
 void updateSerial()
