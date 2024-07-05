@@ -20,6 +20,9 @@ String message;
 String url = "\"eu-central-1.sftpcloud.io\"";
 String username = "\"4c9f4fb87fbb4c599e13cd6f637985ea\"";
 String password = "\"9QajNJs9xa67guInVk75HqSl1bTtni57\"";
+String file = "\"starteng.txt\"";
+int buttonPin =9;
+int buttonRead;
 
 void setup() {
   // Setup for Serial communication
@@ -41,7 +44,9 @@ void setup() {
   pinMode(8, OUTPUT);
   digitalWrite(7, HIGH);
   digitalWrite(8, HIGH);
+  pinMode(buttonPin,INPUT);
   Scheduler.startLoop(loop2);
+  Scheduler.startLoop(loop3);
 }
 
 void loop() {
@@ -56,14 +61,31 @@ void loop() {
   }
   
   delay(500); // Adjust the delay as necessary
-  
+  yield();
 }
 
 void loop2(){
   delay(300000);
   setupFTP(url, username, password);
   sendGETFtp();
-  
+  yield(); 
+}
+
+void loop3(){
+  buttonRead= digitalRead(buttonPin);
+  if(buttonRead){
+    // Your code
+    Serial.println("Button is working : "+ String(buttonRead));
+    message= "Emergency for car Plate Number: 5D E5 A2 82\r"; // Message content
+    file = "\"emergency.txt\"";
+    delay(100);
+    setupFTP(url, username, password);
+    sendPUTFtp(file);
+    delay(500);// This is to waint until you lift up your finger.
+    file = "\"starteng.txt\"";
+    //Serial.println("File : "+ file);
+  }
+  yield();
 }
 
 void updateSerialSmsRecive()
@@ -155,7 +177,7 @@ void checkRFID() {
       message ="Samuel with RFID : 88 4 16 DA Started the car."; // Message content
       delay(100);
       setupFTP(url, username, password);
-      sendPUTFtp();
+      sendPUTFtp(file);
       
       delay(1000); 
       }else if(memcmp(serial, mohamedTag, 4) == 0) {
@@ -167,7 +189,7 @@ void checkRFID() {
       message= "Mohamed with RFID : 5D E5 A2 82 Started the car.\r"; // Message content
       delay(100);
       setupFTP(url, username, password);
-      sendPUTFtp();
+      sendPUTFtp(file);
 
   delay(1000); 
     }else if(memcmp(serial, testTag, 4) == 0) {
@@ -180,7 +202,7 @@ void checkRFID() {
   message= "Test with RFID : 13 C1 90 FC Started the car.\r"; // Message content
   delay(100);
   setupFTP(url, username, password);
-  sendPUTFtp();
+  sendPUTFtp(file);
   delay(1000); 
     }else {
       Serial.println("Unknown RFID.");
@@ -191,7 +213,7 @@ void checkRFID() {
   message= "unknown person with RFID trys to start the car.\r"; // Message content
   delay(100);
   setupFTP(url, username, password);
-  sendPUTFtp();
+  sendPUTFtp(file);
 
   delay(1000); 
     }
@@ -224,7 +246,7 @@ int getFingerprintIDez() {
     message = "unknown person with fingerprint trys to start the car.\r"; // Message content
     delay(100);
     setupFTP(url, username, password);
-    sendPUTFtp();
+    sendPUTFtp(file);
     
     delay(1000); 
     return -1;
@@ -237,17 +259,17 @@ int getFingerprintIDez() {
       message ="Naol with fingerprint started the car.\r"; // Message content
       delay(100);
       setupFTP(url, username, password);
-      sendPUTFtp();
+      sendPUTFtp(file);
     }else if(finger.fingerID == 3 || finger.fingerID == 4){
       message = "Mohammed with fingerprint started the car.\r"; 
       delay(100);
       setupFTP(url, username, password);
-      sendPUTFtp();
+      sendPUTFtp(file);
     }else if(finger.fingerID == 5 || finger.fingerID == 6){
       message = "Nati with fingerprint started the car.\r";
       delay(100);
       setupFTP(url, username, password);
-      sendPUTFtp();
+      sendPUTFtp(file);
     }
     delay(1000); 
     Serial.print("Found ID #");
@@ -275,9 +297,9 @@ void sendGETFtp()
   
   
 }
-void sendPUTFtp()
+void sendPUTFtp(String file)
 {
-  sendATCommand("AT+FTPPUTNAME=\"starteng.txt\"");
+  sendATCommand("AT+FTPPUTNAME="+file+"");
   delay(5000);
   sendATCommand("AT+FTPPUTPATH=\"/\"");
   delay(5000);
