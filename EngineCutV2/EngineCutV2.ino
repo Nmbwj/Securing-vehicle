@@ -1,7 +1,7 @@
 #include <MFRC522.h>
 #include <SPI.h>
 #include "Adafruit_Fingerprint_Due.h"
-
+#include <Scheduler.h>
 #define SAD 10
 #define RST 5
 
@@ -15,6 +15,9 @@ bool fingerprintVerified = false;
 String senderNumber = "";
 bool messageReceived = false;
 String incomingMessage = "";
+int buttonPin =9;
+int buttonRead;
+int after =0, emerg=0, i=1, j=1, m=1;
 
 void setup() {
   // Setup for Serial communication
@@ -42,6 +45,8 @@ void setup() {
   pinMode(8, OUTPUT);
   digitalWrite(7, HIGH);
   digitalWrite(8, HIGH);
+  pinMode(buttonPin,INPUT);
+  Scheduler.startLoop(loop2);
 }
 
 void loop() {
@@ -57,6 +62,38 @@ void loop() {
   
   delay(500); // Adjust the delay as necessary
   updateSerialSmsRecive();
+  
+  delay(500); // Adjust the delay as necessary
+  yield();
+}
+
+void loop2(){
+  buttonRead= digitalRead(buttonPin);
+  if(buttonRead){
+    // Your code
+    emerg= 1;
+    while(after){
+      if(i){
+        Serial.println("It has been Queed by sensor or Get from Server");
+        i=0;
+      }
+      yield();
+      }
+      i=1;
+      Serial.println("It is in Emergency now");
+    after =1;
+    Serial.println("Button is working : "+ String(buttonRead));
+    sendATCommand("AT+CMGF=1"); 
+    sendATCommand("AT+CMGS=\"+251905421795\""); // Replace with recipient's phone number
+    Serial3.print("It is on Emergency"); // Message content
+    delay(100);
+    Serial3.write(26);
+
+    after =0;
+    Serial.println("It get out of Emergency now");
+  }
+  emerg =0;
+  yield();
 }
 
 void updateSerialSmsRecive()
@@ -119,19 +156,42 @@ void processMessage(String message, String sender)
       digitalWrite(8, LOW);
       //delay(3500);
       //digitalWrite(8, HIGH);
+      while(after || emerg){
+        if(m){
+          Serial.println("It may be in Emergency or sending ");
+          m = 0;
+        }
+        yield();
+      }
+      m = 1;
+      Serial.println("It is processing Sending");
+      after=1;
       sendATCommand("AT+CMGF=1"); 
       sendATCommand("AT+CMGS=\"+251905421795\""); // Replace with recipient's phone number
       Serial3.print("Engine is Stoped!. \n If you want give access grand send \"engineon\" "); // Message content
       delay(100);
       Serial3.write(26);
-
+      delay(1000);
+      after=0;
     }else if (message.indexOf("engineon") != -1){
       digitalWrite(8, HIGH);
+      while(after || emerg){
+        if(m){
+          Serial.println("It may be in Emergency or sending ");
+          m = 0;
+        }
+        yield();
+      }
+      m = 1;
+      Serial.println("It is processing Sending");
+      after=1;
       sendATCommand("AT+CMGF=1"); 
       sendATCommand("AT+CMGS=\"+251905421795\""); // Replace with recipient's phone number
       Serial3.print("Engine is on!."); // Message content
       delay(100);
       Serial3.write(26);
+      delay(1000);
+      after=0;
     }
   }
 }
@@ -153,38 +213,72 @@ void checkRFID() {
       digitalWrite(7, LOW);
       delay(1000);
       digitalWrite(7, HIGH);
-    
+    while(after || emerg){
+        if(m){
+          Serial.println("It may be in Emergency or sending ");
+          m = 0;
+        }
+        yield();
+      }
+      m = 1;
+      Serial.println("It is processing Sending");
+      after=1;
+      delay(100);
     sendATCommand("AT+CMGF=1"); 
     sendATCommand("AT+CMGS=\"+251905421795\""); // Replace with recipient's phone number
-  Serial3.print("Mohamed with RFID : 33 8B 91 FC Started the car."); // Message content
+  Serial3.print("Samuel with RFID : 33 8B 91 FC Started the car."); // Message content
   delay(100);
   Serial3.write(26); // ASCII code of CTRL+Z to send the SMS
-  delay(1000); 
+  delay(1000);
+  after=0;
     }else if(memcmp(serial, mohamedTag, 4) == 0) {
       Serial.println("Tag verified as Mohamed's RFID.");
       rfidVerified = true;
       digitalWrite(7, LOW);
       delay(1000);
       digitalWrite(7, HIGH);
-    
+    while(after || emerg){
+        if(m){
+          Serial.println("It may be in Emergency or sending ");
+          m = 0;
+        }
+        yield();
+      }
+      m = 1;
+      Serial.println("It is processing Sending");
+      after=1;
+      delay(100);
     sendATCommand("AT+CMGF=1"); 
     sendATCommand("AT+CMGS=\"+251905421795\""); // Replace with recipient's phone number
   Serial3.print("Mohamed with RFID : 33 8B 91 FC Started the car."); // Message content
   delay(100);
   Serial3.write(26); // ASCII code of CTRL+Z to send the SMS
-  delay(1000); 
+  delay(1000);
+  after=0; 
     } else {
       Serial.println("Unknown RFID.");
       rfidVerified = false;
       digitalWrite(3, HIGH);
     delay(100);
     digitalWrite(3, LOW);
+    while(after || emerg){
+        if(m){
+          Serial.println("It may be in Emergency or sending ");
+          m = 0;
+        }
+        yield();
+      }
+      m = 1;
+      Serial.println("It is processing Sending");
+      after=1;
+      delay(100);
     sendATCommand("AT+CMGF=1"); 
     sendATCommand("AT+CMGS=\"+251905421795\""); // Replace with recipient's phone number
   Serial3.print("unknown person with RFID trys to start the car."); // Message content
   delay(100);
   Serial3.write(26); // ASCII code of CTRL+Z to send the SMS
-  delay(1000); 
+  delay(1000);
+  after=0;
     }
   }
 }
@@ -211,19 +305,45 @@ int getFingerprintIDez() {
     Serial.println("Fingerprint do not match!");
     digitalWrite(3, HIGH);
     delay(100);
+    while(after || emerg){
+        if(m){
+          Serial.println("It may be in Emergency or sending ");
+          m = 0;
+        }
+        yield();
+      }
+      m = 1;
+      Serial.println("It is processing Sending");
+      after=1;
+      delay(100);
+
     digitalWrite(3, LOW);
     sendATCommand("AT+CMGF=1"); 
     sendATCommand("AT+CMGS=\"+251905421795\""); // Replace with recipient's phone number
     Serial3.print("unknown person with fingerprint trys to start the car."); // Message content
     delay(100);
     Serial3.write(26); // ASCII code of CTRL+Z to send the SMS
-    delay(1000); 
+    delay(1000);
+    after=0;
     return -1;
   } else {
     Serial.println("Found a print match!");
     digitalWrite(7, LOW);
     delay(1000);
     digitalWrite(7, HIGH);
+
+    while(after || emerg){
+        if(m){
+          Serial.println("It may be in Emergency or sending ");
+          m = 0;
+        }
+        yield();
+      }
+      m = 1;
+      Serial.println("It is processing Sending");
+      after=1;
+      delay(100);
+    
     sendATCommand("AT+CMGF=1"); 
     sendATCommand("AT+CMGS=\"+251905421795\""); // Replace with recipient's phone number
     if(finger.fingerID == 1 || finger.fingerID == 2){
@@ -235,7 +355,8 @@ int getFingerprintIDez() {
     }
     delay(100);
     Serial3.write(26); // ASCII code of CTRL+Z to send the SMS
-    delay(1000); 
+    delay(1000);
+    after=0;
     Serial.print("Found ID #");
     Serial.print(finger.fingerID); 
     Serial.print(" with confidence of ");
