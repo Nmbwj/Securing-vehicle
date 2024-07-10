@@ -60,10 +60,12 @@ void loop() {
     fingerprintVerified = false;
   }
   
-  delay(500); // Adjust the delay as necessary
-  updateSerialSmsRecive();
   
   delay(500); // Adjust the delay as necessary
+  updateSerialSmsRecive();
+  delay(500); // Adjust the delay as necessary
+  
+
   yield();
 }
 
@@ -80,6 +82,7 @@ void loop2(){
       yield();
       }
       i=1;
+      delay(3000);
       Serial.println("It is in Emergency now");
     after =1;
     Serial.println("Button is working : "+ String(buttonRead));
@@ -138,13 +141,15 @@ void updateSerialSmsRecive()
         messageReceived = false;
       }
     }
+    
   }
+  
 }
 
 void processMessage(String message, String sender)
 {
   // Check if the sender is the authorized number
-  if (sender == "+251905421795")
+  if (sender == "+251977245580")
   {
     // Convert message to lowercase for case-insensitive comparison
     message.toLowerCase();
@@ -156,42 +161,25 @@ void processMessage(String message, String sender)
       digitalWrite(8, LOW);
       //delay(3500);
       //digitalWrite(8, HIGH);
-      while(after || emerg){
-        if(m){
-          Serial.println("It may be in Emergency or sending ");
-          m = 0;
-        }
-        yield();
-      }
-      m = 1;
-      Serial.println("It is processing Sending");
-      after=1;
+      
+      
       sendATCommand("AT+CMGF=1"); 
       sendATCommand("AT+CMGS=\"+251905421795\""); // Replace with recipient's phone number
       Serial3.print("Engine is Stoped!. \n If you want give access grand send \"engineon\" "); // Message content
       delay(100);
       Serial3.write(26);
       delay(1000);
-      after=0;
+      
     }else if (message.indexOf("engineon") != -1){
       digitalWrite(8, HIGH);
-      while(after || emerg){
-        if(m){
-          Serial.println("It may be in Emergency or sending ");
-          m = 0;
-        }
-        yield();
-      }
-      m = 1;
-      Serial.println("It is processing Sending");
-      after=1;
+      
       sendATCommand("AT+CMGF=1"); 
       sendATCommand("AT+CMGS=\"+251905421795\""); // Replace with recipient's phone number
       Serial3.print("Engine is on!."); // Message content
       delay(100);
       Serial3.write(26);
       delay(1000);
-      after=0;
+      
     }
   }
 }
@@ -223,7 +211,7 @@ void checkRFID() {
       m = 1;
       Serial.println("It is processing Sending");
       after=1;
-      delay(100);
+      delay(3000);
     sendATCommand("AT+CMGF=1"); 
     sendATCommand("AT+CMGS=\"+251905421795\""); // Replace with recipient's phone number
   Serial3.print("Samuel with RFID : 33 8B 91 FC Started the car."); // Message content
@@ -247,7 +235,7 @@ void checkRFID() {
       m = 1;
       Serial.println("It is processing Sending");
       after=1;
-      delay(100);
+      delay(3000);
     sendATCommand("AT+CMGF=1"); 
     sendATCommand("AT+CMGS=\"+251905421795\""); // Replace with recipient's phone number
   Serial3.print("Mohamed with RFID : 33 8B 91 FC Started the car."); // Message content
@@ -271,7 +259,7 @@ void checkRFID() {
       m = 1;
       Serial.println("It is processing Sending");
       after=1;
-      delay(100);
+      delay(3000);
     sendATCommand("AT+CMGF=1"); 
     sendATCommand("AT+CMGS=\"+251905421795\""); // Replace with recipient's phone number
   Serial3.print("unknown person with RFID trys to start the car."); // Message content
@@ -315,7 +303,7 @@ int getFingerprintIDez() {
       m = 1;
       Serial.println("It is processing Sending");
       after=1;
-      delay(100);
+      delay(3000);
 
     digitalWrite(3, LOW);
     sendATCommand("AT+CMGF=1"); 
@@ -342,7 +330,7 @@ int getFingerprintIDez() {
       m = 1;
       Serial.println("It is processing Sending");
       after=1;
-      delay(100);
+      delay(3000);
     
     sendATCommand("AT+CMGF=1"); 
     sendATCommand("AT+CMGS=\"+251905421795\""); // Replace with recipient's phone number
