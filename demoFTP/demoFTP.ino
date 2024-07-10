@@ -1,12 +1,17 @@
 
-String message= "Hello sam!\r";
+String message= "welcome naol\r";
 void setup() {
   // Setup for Serial communication
   Serial.begin(115200);
   Serial3.begin(9600);
-  String url = "\"eu-central-1.sftpcloud.io\"";
+  /*String url = "\"eu-central-1.sftpcloud.io\"";
   String username = "\"4c9f4fb87fbb4c599e13cd6f637985ea\"";
   String password = "\"9QajNJs9xa67guInVk75HqSl1bTtni57\"";
+  */
+  String url = "\"49.13.205.144\"";
+  String username = "\"fleet\"";
+  String password = "\"fleet\"";
+  
   setupFTP(url, username, password);
   sendGETFtp();
   delay(15000);
@@ -25,7 +30,7 @@ void sendGETFtp()
 {
   sendATCommand("AT+FTPGETNAME=\"enginecut.txt\"");
   delay(5000);
-  sendATCommand("AT+FTPGETPATH=\"/\"");
+  sendATCommand("AT+FTPGETPATH=\"/home/fleet/work/\"");
   delay(5000);
   sendATCommand("AT+FTPGET=1");
   delay(5000);
@@ -41,7 +46,7 @@ void sendPUTFtp()
 {
   sendATCommand("AT+FTPPUTNAME=\"starteng.txt\"");
   delay(5000);
-  sendATCommand("AT+FTPPUTPATH=\"/\"");
+  sendATCommand("AT+FTPPUTPATH=\"/home/fleet/work/\"");
   delay(5000);
   sendATCommand("AT+FTPPUT=1");
   delay(5000);
