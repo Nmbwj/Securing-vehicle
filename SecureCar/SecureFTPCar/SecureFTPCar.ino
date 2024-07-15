@@ -222,9 +222,9 @@ void checkRFID() {
     if (memcmp(serial, samuelTag, 4) == 0) {
       Serial.println("Tag verified as Samuel's RFID.");
       rfidVerified = true;
-      digitalWrite(13, LOW);
-      delay(1000);
       digitalWrite(13, HIGH);
+      delay(1000);
+      digitalWrite(13, LOW);
       message ="Samuel with RFID : 88 4 16 DA Started the car."; // Message content
       delay(100);
       while(after || emerg){
@@ -248,9 +248,9 @@ void checkRFID() {
       }else if(memcmp(serial, mohamedTag, 4) == 0) {
       Serial.println("Tag verified as Mohamed's RFID.");
       rfidVerified = true;
-      digitalWrite(13, LOW);
-      delay(1000);
       digitalWrite(13, HIGH);
+      delay(1000);
+      digitalWrite(13, LOW);
       message= "Mohamed with RFID : 5D E5 A2 82 Started the car.\r"; // Message content
       
       while(after || emerg){
@@ -274,9 +274,9 @@ void checkRFID() {
     }else if(memcmp(serial, testTag, 4) == 0) {
       Serial.println("Tag verified as Test Card's RFID.");
       rfidVerified = true;
-      digitalWrite(13, LOW);
-      delay(1000);
       digitalWrite(13, HIGH);
+      delay(1000);
+      digitalWrite(13, LOW);
 
   message= "Test with RFID : 13 C1 90 FC Started the car.\r"; // Message content
   
@@ -382,9 +382,9 @@ int getFingerprintIDez() {
     return -1;
   } else {
     Serial.println("Found a print match!");
-    digitalWrite(13, LOW);
-    delay(1000);
     digitalWrite(13, HIGH);
+    delay(1000);
+    digitalWrite(13, LOW);
     if(finger.fingerID == 1 || finger.fingerID == 2){
       message ="Naol with fingerprint started the car.\r"; // Message content
       
