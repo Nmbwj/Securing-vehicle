@@ -17,9 +17,15 @@ bool fingerprintVerified = false;
 bool messageReceived = false;
 String incomingMessage = "";
 String message;
+/*
 String url = "\"eu-central-1.sftpcloud.io\"";
 String username = "\"4c9f4fb87fbb4c599e13cd6f637985ea\"";
 String password = "\"9QajNJs9xa67guInVk75HqSl1bTtni57\"";
+*/
+  String url = "\"49.13.205.144\"";
+  String username = "\"fleet\"";
+  String password = "\"fleet\"";
+
 String file = "\"starteng.txt\"";
 int buttonPin =9;
 int buttonRead;
@@ -105,7 +111,7 @@ void loop3(){
     after =1;
     Serial.println("Button is working : "+ String(buttonRead));
     message= "Emergency for car Plate Number: 5D E5 A2 82\r"; // Message content
-    file = "\"emergency.txt\"";
+    file = "\"starteng.txt\""; // Temporarly changed to Starteng due to testing, the change to emergency.txt
     delay(100);
     setupFTP(url, username, password);
     sendPUTFtp(file);
@@ -415,7 +421,7 @@ void sendGETFtp()
 {
   sendATCommand("AT+FTPGETNAME=\"enginecut.txt\"");
   delay(5000);
-  sendATCommand("AT+FTPGETPATH=\"/\"");
+  sendATCommand("AT+FTPGETPATH=\"/home/fleet/work/\"");
   delay(5000);
   sendATCommand("AT+FTPGET=1");
   delay(5000);
@@ -432,7 +438,7 @@ void sendPUTFtp(String file)
 {
   sendATCommand("AT+FTPPUTNAME="+file+"");
   delay(5000);
-  sendATCommand("AT+FTPPUTPATH=\"/\"");
+  sendATCommand("AT+FTPPUTPATH=\"/home/fleet/work/\"");
   delay(5000);
   sendATCommand("AT+FTPPUT=1");
   delay(5000);

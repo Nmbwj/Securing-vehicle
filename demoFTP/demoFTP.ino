@@ -1,5 +1,5 @@
 
-String message= "welcome naol\r";
+String message= "naol we are good to go\r";
 void setup() {
   // Setup for Serial communication
   Serial.begin(115200);
