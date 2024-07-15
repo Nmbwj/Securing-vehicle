@@ -29,7 +29,7 @@ String password = "\"9QajNJs9xa67guInVk75HqSl1bTtni57\"";
 String file = "\"starteng.txt\"";
 int buttonPin =9;
 int buttonRead;
-int after =0, emerg=0, i=1, j=1, m=1;
+int after =0, emerg=0, net=1, i=1, j=1, m=1;
 
 
 void setup() {
@@ -55,6 +55,7 @@ void setup() {
   pinMode(buttonPin,INPUT);
   Scheduler.startLoop(loop2);
   Scheduler.startLoop(loop3);
+  Scheduler.startLoop(loop4);
 }
 
 void loop() {
@@ -124,6 +125,18 @@ void loop3(){
   emerg =0;
   
   yield();
+}
+
+void loop4(){
+  while(net)yield();
+  Serial.println("it is on loop4");
+  delay(500);
+  setupFTP(url, username, password);
+  sendPUTFtp(file);
+  delay(500);
+  after = 0;
+  net=1;
+  
 }
 
 void updateSerialSmsRecive()
@@ -220,13 +233,16 @@ void checkRFID() {
           m = 0;
         }
         yield();
+        //return;
         }
         m = 1;
       Serial.println("It is processing Sensor");
       after=1;
-      setupFTP(url, username, password);
+      /*setupFTP(url, username, password);
       sendPUTFtp(file);
-      after=0;
+      */
+      net = 0;
+      //after=0;
       Serial.println("It has finished the sensor");
       delay(1000); 
       }else if(memcmp(serial, mohamedTag, 4) == 0) {
@@ -243,14 +259,16 @@ void checkRFID() {
           m = 0;
         }
         yield();
+        //return;
         }
         m = 1;
       Serial.println("It is processing Sensor");
       after=1;
       delay(100);
-      setupFTP(url, username, password);
+      /*setupFTP(url, username, password);
       sendPUTFtp(file);
-      after=0;
+      after=0;*/
+      net = 0;
       Serial.println("It has finished the sensor");
   delay(1000); 
     }else if(memcmp(serial, testTag, 4) == 0) {
@@ -268,14 +286,18 @@ void checkRFID() {
           m = 0;
         }
         yield();
+        //return;
         }
         m = 1;
   Serial.println("It is processing Sensor");  
   after=1;
   delay(100);
+  /*
   setupFTP(url, username, password);
   sendPUTFtp(file);
   after=0;
+  */
+  net = 0;
   Serial.println("It has finished the sensor");
   delay(1000); 
     }else {
@@ -284,7 +306,6 @@ void checkRFID() {
       digitalWrite(3, HIGH);
     delay(100);
     digitalWrite(3, LOW);
-  message= "unknown person with RFID trys to start the car.\r"; // Message content
   
   while(after || emerg){
         if(m){
@@ -292,14 +313,20 @@ void checkRFID() {
           m = 0;
         }
         yield();
+        return;
         }
         m = 1;
   Serial.println("It is processing Sensor");
   after=1;
   delay(100);
+  /*
   setupFTP(url, username, password);
   sendPUTFtp(file);
   after=0;
+  */
+  message= "unknown person with RFID trys to start the car.\r"; // Message content
+  
+  net = 0;
   Serial.println("It has finished the sensor");
   delay(1000); 
     }
@@ -329,7 +356,6 @@ int getFingerprintIDez() {
     digitalWrite(3, HIGH);
     delay(100);
     digitalWrite(3, LOW);
-    message = "unknown person with fingerprint trys to start the car.\r"; // Message content
     
     while(after || emerg){
         if(m){
@@ -337,14 +363,20 @@ int getFingerprintIDez() {
           m = 0;
         }
         yield();
+        return -1;
         }
         m = 1;
     Serial.println("It is processing Sensor");
     after=1;
     delay(100);
+    /*
     setupFTP(url, username, password);
     sendPUTFtp(file);
     after=0;
+    */
+    message = "unknown person with fingerprint trys to start the car.\r"; // Message content
+    
+    net = 0;
     Serial.println("It has finished the sensor");
     delay(1000); 
     return -1;
@@ -362,14 +394,17 @@ int getFingerprintIDez() {
           m = 0;
         }
         yield();
+        //return finger.fingerID;
         }
         m = 1;
       Serial.println("It is processing Sensor");
       after=1;
-      delay(100);
-      setupFTP(url, username, password);
-      sendPUTFtp(file);
-      after=0;
+      /*
+    setupFTP(url, username, password);
+    sendPUTFtp(file);
+    after=0;
+    */
+    net =0;
       Serial.println("It has finished the sensor");
     }else if(finger.fingerID == 3 || finger.fingerID == 4){
       message = "Mohammed with fingerprint started the car.\r"; 
@@ -380,14 +415,18 @@ int getFingerprintIDez() {
           m = 0;
         }
         yield();
+        //return finger.fingerID;
         }
         m = 1;
       Serial.println("It is processing Sensor");
       after=1;
       delay(100);
-      setupFTP(url, username, password);
-      sendPUTFtp(file);
-      after=0;
+      /*
+    setupFTP(url, username, password);
+    sendPUTFtp(file);
+    after=0;
+    */
+    net = 0;
       Serial.println("It has finished the sensor");
     }else if(finger.fingerID == 5 || finger.fingerID == 6){
       message = "Nati with fingerprint started the car.\r";
@@ -398,14 +437,18 @@ int getFingerprintIDez() {
           m = 0;
         }
         yield();
+        //return finger.fingerID;
         }
         m = 1;
       Serial.println("It is processing Sensor");
       after=1;
       delay(100);
-      setupFTP(url, username, password);
-      sendPUTFtp(file);
-      after=0;
+       /*
+    setupFTP(url, username, password);
+    sendPUTFtp(file);
+    after=0;
+    */
+    net = 0;
       Serial.println("It has finished the sensor");
     }
     delay(1000); 
