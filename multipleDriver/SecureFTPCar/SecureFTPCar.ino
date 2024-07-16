@@ -244,16 +244,14 @@ void checkRFID() {
           if (convertedValue.equals(compareValue)) {
             Serial.println("Match found");
             Serial.println("This Driver is banned!");
-            message ="Samuel with RFID : 88 4 16 DA Tries to Start the car. , \r"; // Message content
             } else {
               Serial.println("No match found \n "+convertedValue+"\n");
-              message ="Samuel with RFID : 88 4 16 DA Started the car. , \r"; // Message content
               digitalWrite(13, HIGH);
               delay(1000);
               digitalWrite(13, LOW);
               }
       
-      
+      message ="Samuel with RFID : 88 4 16 DA Started the car. , \r"; // Message content
       delay(100);
       while(after || emerg){
         if(m){
@@ -276,25 +274,11 @@ void checkRFID() {
       }else if(memcmp(serial, mohamedTag, 4) == 0) {
       Serial.println("Tag verified as Mohamed's RFID.");
       rfidVerified = true;
-      String convertedValue;
-      for (int i = 0; i < sizeof(mohamedTag) -1; i++) {
-        if (i > 0) {
-          convertedValue += " ";
-          }
-          convertedValue += String(mohamedTag[i], HEX);
-          }
-          // Compare the converted value with the compareValue
-          if (convertedValue.equals(compareValue)) {
-            Serial.println("Match found");
-            Serial.println("This Driver is banned!");
-            message ="Mohamed with RFID : 5D E5 A2 82 Tries to Start the car. , \r"; // Message content
-            } else {
-              Serial.println("No match found \n "+convertedValue+"\n");
-              message ="Mohamed with RFID : 5D E5 A2 82 Started the car. , \r"; // Message content
-              digitalWrite(13, HIGH);
-              delay(1000);
-              digitalWrite(13, LOW);
-              }
+      digitalWrite(13, HIGH);
+      delay(1000);
+      digitalWrite(13, LOW);
+      message= "Mohamed with RFID : 5D E5 A2 82 Started the car. , \r"; // Message content
+      
       while(after || emerg){
         if(m){
           Serial.println("It may be in Emergency or Get from the Server");
@@ -316,26 +300,13 @@ void checkRFID() {
     }else if(memcmp(serial, testTag, 4) == 0) {
       Serial.println("Tag verified as Test Card's RFID.");
       rfidVerified = true;
-      String convertedValue;
-      for (int i = 0; i < sizeof(testTag) -1; i++) {
-        if (i > 0) {
-          convertedValue += " ";
-          }
-          convertedValue += String(testTag[i], HEX);
-          }
-          // Compare the converted value with the compareValue
-          if (convertedValue.equals(compareValue)) {
-            Serial.println("Match found");
-            Serial.println("This Driver is banned!");
-            message ="Test with RFID : 13 C1 90 FC Tries to Start the car. , \r"; // Message content
-            } else {
-              Serial.println("No match found \n "+convertedValue+"\n");
-              message ="Test with RFID : 13 C1 90 FC Started the car. , \r"; // Message content
-              digitalWrite(13, HIGH);
-              delay(1000);
-              digitalWrite(13, LOW);
-              }
-      while(after || emerg){
+      digitalWrite(13, HIGH);
+      delay(1000);
+      digitalWrite(13, LOW);
+
+  message= "Test with RFID : 13 C1 90 FC Started the car. , \r"; // Message content
+  
+  while(after || emerg){
         if(m){
           Serial.println("It may be in Emergency or Get from the Server");
           m = 0;
