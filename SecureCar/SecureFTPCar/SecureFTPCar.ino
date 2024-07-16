@@ -17,6 +17,7 @@ bool fingerprintVerified = false;
 bool messageReceived = false;
 String incomingMessage = "";
 String message;
+String compareValue;
 /*
 String url = "\"eu-central-1.sftpcloud.io\"";
 String username = "\"4c9f4fb87fbb4c599e13cd6f637985ea\"";
@@ -27,6 +28,8 @@ String password = "\"9QajNJs9xa67guInVk75HqSl1bTtni57\"";
   String password = "\"fleet\"";
 
 String file = "\"database.csv\"";
+String file1 = "\"enginecut.txt\"";
+String file2 = "\"ban.txt\"";
 int buttonPin =9;
 int buttonRead;
 int after =0, emerg=0, net=1, i=1, j=1, m=1;
@@ -90,7 +93,10 @@ void loop2(){
   }
   after = 1;
   setupFTP(url, username, password);
-  sendGETFtp();
+  sendGETFtp(file1);
+  delay(500);
+  setupFTP(url, username, password);
+  sendGETFtp(file2);
   after = 0;
   yield(); 
 }
@@ -111,7 +117,7 @@ void loop3(){
       Serial.println("It is in Emergency now");
     after =1;
     Serial.println("Button is working : "+ String(buttonRead));
-    message= "Emergency for car Plate Number: 5D E5 A2 82\r"; // Message content
+    message= "Emergency for car Plate Number: 5D E5 A2 82, \r"; // Message content
     //file = "\"starteng.txt\""; // Temporarly changed to Starteng due to testing, the change to emergency.txt
     delay(100);
     setupFTP(url, username, password);
@@ -183,7 +189,7 @@ void processMessage(String message)
   
     // Convert message to lowercase for case-insensitive comparison
     message.toLowerCase();
-
+    
     // Check if the message contains "enginecut"
     if (message.indexOf("enginecut") != -1)
     {
@@ -205,6 +211,11 @@ void processMessage(String message)
       delay(100);
       
     }
+    else
+    {
+      Serial.println("It is proccessing banned: " + message + "");
+      compareValue =message;
+    }
   
 }
 void checkRFID() {
@@ -222,9 +233,24 @@ void checkRFID() {
     if (memcmp(serial, samuelTag, 4) == 0) {
       Serial.println("Tag verified as Samuel's RFID.");
       rfidVerified = true;
-      digitalWrite(13, HIGH);
-      delay(1000);
-      digitalWrite(13, LOW);
+      String convertedValue;
+      for (int i = 0; i < sizeof(samuelTag) -1; i++) {
+        if (i > 0) {
+          convertedValue += " ";
+          }
+          convertedValue += String(samuelTag[i], HEX);
+          }
+          // Compare the converted value with the compareValue
+          if (convertedValue.equals(compareValue)) {
+            Serial.println("Match found");
+            Serial.println("This Driver is banned!");
+            } else {
+              Serial.println("No match found \n "+convertedValue+"\n");
+              digitalWrite(13, HIGH);
+              delay(1000);
+              digitalWrite(13, LOW);
+              }
+      
       message ="Samuel with RFID : 88 4 16 DA Started the car. , \r"; // Message content
       delay(100);
       while(after || emerg){
@@ -460,9 +486,9 @@ int getFingerprintIDez() {
   }
 }
 
-void sendGETFtp()
+void sendGETFtp(String file)
 {
-  sendATCommand("AT+FTPGETNAME=\"enginecut.txt\"");
+  sendATCommand("AT+FTPGETNAME="+file+"");
   delay(5000);
   sendATCommand("AT+FTPGETPATH=\"/home/fleet/work/\"");
   delay(5000);
