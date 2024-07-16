@@ -26,7 +26,7 @@ String password = "\"9QajNJs9xa67guInVk75HqSl1bTtni57\"";
   String username = "\"fleet\"";
   String password = "\"fleet\"";
 
-String file = "\"starteng.txt\"";
+String file = "\"database.csv\"";
 int buttonPin =9;
 int buttonRead;
 int after =0, emerg=0, net=1, i=1, j=1, m=1;
@@ -112,12 +112,12 @@ void loop3(){
     after =1;
     Serial.println("Button is working : "+ String(buttonRead));
     message= "Emergency for car Plate Number: 5D E5 A2 82\r"; // Message content
-    file = "\"starteng.txt\""; // Temporarly changed to Starteng due to testing, the change to emergency.txt
+    //file = "\"starteng.txt\""; // Temporarly changed to Starteng due to testing, the change to emergency.txt
     delay(100);
     setupFTP(url, username, password);
     sendPUTFtp(file);
     delay(500);// This is to waint until you lift up your finger.
-    file = "\"starteng.txt\"";
+    //file = "\"starteng.txt\"";
     //Serial.println("File : "+ file);
     after =0;
     Serial.println("It get out of Emergency now");
@@ -136,7 +136,7 @@ void loop4(){
   delay(500);
   after = 0;
   net=1;
-  
+  yield();
 }
 
 void updateSerialSmsRecive()
@@ -225,7 +225,7 @@ void checkRFID() {
       digitalWrite(13, HIGH);
       delay(1000);
       digitalWrite(13, LOW);
-      message ="Samuel with RFID : 88 4 16 DA Started the car."; // Message content
+      message ="Samuel with RFID : 88 4 16 DA Started the car. , \r"; // Message content
       delay(100);
       while(after || emerg){
         if(m){
@@ -251,7 +251,7 @@ void checkRFID() {
       digitalWrite(13, HIGH);
       delay(1000);
       digitalWrite(13, LOW);
-      message= "Mohamed with RFID : 5D E5 A2 82 Started the car.\r"; // Message content
+      message= "Mohamed with RFID : 5D E5 A2 82 Started the car. , \r"; // Message content
       
       while(after || emerg){
         if(m){
@@ -278,7 +278,7 @@ void checkRFID() {
       delay(1000);
       digitalWrite(13, LOW);
 
-  message= "Test with RFID : 13 C1 90 FC Started the car.\r"; // Message content
+  message= "Test with RFID : 13 C1 90 FC Started the car. , \r"; // Message content
   
   while(after || emerg){
         if(m){
@@ -324,7 +324,7 @@ void checkRFID() {
   sendPUTFtp(file);
   after=0;
   */
-  message= "unknown person with RFID trys to start the car.\r"; // Message content
+  message= "unknown person with RFID trys to start the car. , \r"; // Message content
   
   net = 0;
   Serial.println("It has finished the sensor");
@@ -374,7 +374,7 @@ int getFingerprintIDez() {
     sendPUTFtp(file);
     after=0;
     */
-    message = "unknown person with fingerprint trys to start the car.\r"; // Message content
+    message = "unknown person with fingerprint trys to start the car. , \r"; // Message content
     
     net = 0;
     Serial.println("It has finished the sensor");
@@ -386,7 +386,7 @@ int getFingerprintIDez() {
     delay(1000);
     digitalWrite(13, LOW);
     if(finger.fingerID == 1 || finger.fingerID == 2){
-      message ="Naol with fingerprint started the car.\r"; // Message content
+      message ="Naol with fingerprint started the car. , \r"; // Message content
       
       while(after || emerg){
         if(m){
@@ -407,7 +407,7 @@ int getFingerprintIDez() {
     net =0;
       Serial.println("It has finished the sensor");
     }else if(finger.fingerID == 3 || finger.fingerID == 4){
-      message = "Mohammed with fingerprint started the car.\r"; 
+      message = "Mohammed with fingerprint started the car. , \r"; 
       
       while(after || emerg){
         if(m){
@@ -429,7 +429,7 @@ int getFingerprintIDez() {
     net = 0;
       Serial.println("It has finished the sensor");
     }else if(finger.fingerID == 5 || finger.fingerID == 6){
-      message = "Nati with fingerprint started the car.\r";
+      message = "Nati with fingerprint started the car. , \r";
       
       while(after || emerg){
         if(m){
@@ -482,6 +482,8 @@ void sendPUTFtp(String file)
   sendATCommand("AT+FTPPUTNAME="+file+"");
   delay(5000);
   sendATCommand("AT+FTPPUTPATH=\"/home/fleet/work/\"");
+  delay(5000);
+  sendATCommand("AT+FTPPUTOPT=\"APPE\""); // This should be on user specification.
   delay(5000);
   sendATCommand("AT+FTPPUT=1");
   delay(5000);
