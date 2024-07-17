@@ -9,8 +9,8 @@ MFRC522 nfc(SAD, RST);
 Adafruit_Fingerprint_Due finger = Adafruit_Fingerprint_Due();
 
 byte samuelTag[5] = {0x88, 0x4, 0x16, 0xDA};
-byte mohamedTag[5] = {0x5D, 0xE5, 0xA2, 0x82};
-byte testTag[5] = {0x13, 0xC1, 0x90, 0xFC};
+byte mohamedTag[5] = {0x5D, 0xE5, 0xA2, 0x82}; 
+byte testTag[5] = {0x13, 0xC1, 0x90, 0xFC}; 
 bool rfidVerified = false;
 bool fingerprintVerified = false;
 
@@ -87,9 +87,10 @@ void loop2(){
     j=1;
   Serial.println("Now it not in Emergency or out of Emergency so lets update the EngineCut");
   delay(300000);
-  if(after || emerg){
-    Serial.println("It has been Queed by sensor or Emergency come on!.");
-    return;
+  while(after || emerg){
+    //Serial.println("It has been Queed by sensor or Emergency come on!.");
+    yield();
+    continue;
   }
   after = 1;
   setupFTP(url, username, password);
@@ -241,7 +242,7 @@ void checkRFID() {
           convertedValue += String(samuelTag[i], HEX);
           }
           // Compare the converted value with the compareValue
-          if (convertedValue.equals(compareValue)) {
+          if (compareValue.indexOf(convertedValue) != -1) {
             Serial.println("Match found");
             Serial.println("This Driver is banned!");
             message ="Samuel with RFID : 88 4 16 DA Tries to Start the car. , \r"; // Message content
@@ -284,7 +285,7 @@ void checkRFID() {
           convertedValue += String(mohamedTag[i], HEX);
           }
           // Compare the converted value with the compareValue
-          if (convertedValue.equals(compareValue)) {
+          if (compareValue.indexOf(convertedValue) != -1) {
             Serial.println("Match found");
             Serial.println("This Driver is banned!");
             message ="Mohamed with RFID : 5D E5 A2 82 Tries to Start the car. , \r"; // Message content
@@ -324,7 +325,7 @@ void checkRFID() {
           convertedValue += String(testTag[i], HEX);
           }
           // Compare the converted value with the compareValue
-          if (convertedValue.equals(compareValue)) {
+          if (compareValue.indexOf(convertedValue) != -1) {
             Serial.println("Match found");
             Serial.println("This Driver is banned!");
             message ="Test with RFID : 13 C1 90 FC Tries to Start the car. , \r"; // Message content
@@ -436,13 +437,17 @@ int getFingerprintIDez() {
     delay(1000); 
     return -1;
   } else {
-    Serial.println("Found a print match!");
-    digitalWrite(13, HIGH);
-    delay(1000);
-    digitalWrite(13, LOW);
+    
     if(finger.fingerID == 1 || finger.fingerID == 2){
+      if((compareValue.indexOf("13 c1 90 fc") != -1)){
+        message ="Naol with fingerprint Tries to start the car. , \r"; // Message content
+      }else{
       message ="Naol with fingerprint started the car. , \r"; // Message content
-      
+      Serial.println("Found a print match!");
+      digitalWrite(13, HIGH);
+      delay(1000);
+      digitalWrite(13, LOW);
+      }
       while(after || emerg){
         if(m){
           Serial.println("It may be in Emergency or Get from the Server");
@@ -462,8 +467,14 @@ int getFingerprintIDez() {
     net =0;
       Serial.println("It has finished the sensor");
     }else if(finger.fingerID == 3 || finger.fingerID == 4){
+      if((compareValue.indexOf("5d e5 a2 82") != -1)){
+        message ="Mohammed with fingerprint Tries to start the car. , \r"; // Message content
+      }else{
       message = "Mohammed with fingerprint started the car. , \r"; 
-      
+      digitalWrite(13, HIGH);
+      delay(1000);
+      digitalWrite(13, LOW);
+      }
       while(after || emerg){
         if(m){
           Serial.println("It may be in Emergency or Get from the Server");
@@ -477,28 +488,6 @@ int getFingerprintIDez() {
       after=1;
       delay(100);
       /*
-    setupFTP(url, username, password);
-    sendPUTFtp(file);
-    after=0;
-    */
-    net = 0;
-      Serial.println("It has finished the sensor");
-    }else if(finger.fingerID == 5 || finger.fingerID == 6){
-      message = "Nati with fingerprint started the car. , \r";
-      
-      while(after || emerg){
-        if(m){
-          Serial.println("It may be in Emergency or Get from the Server");
-          m = 0;
-        }
-        yield();
-        //return finger.fingerID;
-        }
-        m = 1;
-      Serial.println("It is processing Sensor");
-      after=1;
-      delay(100);
-       /*
     setupFTP(url, username, password);
     sendPUTFtp(file);
     after=0;
