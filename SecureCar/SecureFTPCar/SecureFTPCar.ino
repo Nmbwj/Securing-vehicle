@@ -25,11 +25,11 @@ String password = "\"9QajNJs9xa67guInVk75HqSl1bTtni57\"";
 */
   String url = "\"49.13.205.144\"";
   String username = "\"fleet\"";
-  String password = "\"fleet\"";
+  String password = "\"fleetmanagement2demosamnawa\"";
 
 String file = "\"database.csv\"";
-String file1 = "\"enginecut.txt\"";
-String file2 = "\"ban.txt\"";
+String file1 = "\"status.csv\"";
+
 int buttonPin =9;
 int buttonRead;
 int after =0, emerg=0, net=1, i=1, j=1, m=1;
@@ -96,8 +96,8 @@ void loop2(){
   setupFTP(url, username, password);
   sendGETFtp(file1);
   delay(500);
-  setupFTP(url, username, password);
-  sendGETFtp(file2);
+  //setupFTP(url, username, password);
+  //sendGETFtp(file2);
   after = 0;
   yield(); 
 }
@@ -177,6 +177,8 @@ void updateSerialSmsRecive()
         // Process the message
         processMessage(messageContent);
 
+        compareValue = messageContent;
+
         // Clear the buffers
         incomingMessage = "";
         messageReceived = false;
@@ -212,11 +214,10 @@ void processMessage(String message)
       delay(100);
       
     }
-    else
-    {
-      Serial.println("It is proccessing banned: " + message + "");
-      compareValue =message;
-    }
+
+    //Serial.println("It is proccessing banned: " + message + "");
+    //compareValue =message;
+    
   
 }
 void checkRFID() {
