@@ -1,16 +1,16 @@
 # this is to install new package/module using pipx and using that package/module#
 
 ## Configuration before any pipx ##
-cd /root/.local/share/pipx/
-python3 -m venv ./venvs
+mkdir -p $HOME/.venvs
+python3 -m venv $HOME/.venvs/MyEnv 
 ##
 
 ## installing using PIPX ##
-pipx install [packge_name]
+pipy [packge_name]
 ##
 
 ## Make Alias ##
-alias torchvm="source ~/.local/share/pipx/venvs/torch/bin/activate"
+alias torchvm="source$HOME/.venvs/MyEnv/bin/activate"
 ##
 
 ## Deactivate ##
