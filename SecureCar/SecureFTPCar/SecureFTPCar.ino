@@ -174,10 +174,12 @@ void updateSerialSmsRecive()
         String messageContent = incomingMessage.substring(messageStart, incomingMessage.indexOf("\r\n", messageStart));
         messageContent.trim();
 
+        compareValue = messageContent;
+         
         // Process the message
         processMessage(messageContent);
 
-        compareValue = messageContent;
+        
 
         // Clear the buffers
         incomingMessage = "";
