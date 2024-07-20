@@ -1,4 +1,4 @@
-# this is to install new package/module using pipx and using that package/module#
+# this is to install new package/module using pip and using that package/module#
 
 ## Configuration before any pipx ##
 mkdir -p $HOME/.venvs
