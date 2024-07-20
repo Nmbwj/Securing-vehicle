@@ -175,7 +175,10 @@ void updateSerialSmsRecive()
         messageContent.trim();
 
         compareValue = messageContent;
-         
+        
+        compareValue.toLowerCase();
+
+        //Serial.println(" This is it:" + compareValue);
         // Process the message
         processMessage(messageContent);
 
