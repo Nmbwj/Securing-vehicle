@@ -15,7 +15,7 @@ bool fingerprintVerified = false;
 String senderNumber = "";
 bool messageReceived = false;
 String incomingMessage = "";
-String phoneNumber = "+251977245580";
+String phoneNumber = "+251933660705";
 
 void setup() {
   // Setup for Serial communication
@@ -152,12 +152,12 @@ void checkRFID() {
       Serial.println("Tag verified as Mr. Y's RFID.");
       rfidVerified = true;
       digitalWrite(7, LOW);
-      delay(1000);
+      delay(800);
       digitalWrite(7, HIGH);
     
     sendATCommand("AT+CMGF=1"); 
     sendATCommand("AT+CMGS=\""+phoneNumber+"\""); // Replace with recipient's phone number
-  Serial3.print("Mr. Y with RFID : "+String(samuelTag[0],HEX)+" "+ String(samuelTag[1],HEX)+" "+String(samuelTag[2],HEX)+" "+String(samuelTag[3],HEX)+" Started the car."); // Message content
+  Serial3.print("Prado Driver with Card RFID : "+String(samuelTag[0],HEX)+" "+ String(samuelTag[1],HEX)+" "+String(samuelTag[2],HEX)+" "+String(samuelTag[3],HEX)+" Started the car."); // Message content
   delay(100);
   Serial3.write(26); // ASCII code of CTRL+Z to send the SMS
   delay(1000); 
@@ -165,12 +165,12 @@ void checkRFID() {
       Serial.println("Tag verified as Mr. X's RFID.");
       rfidVerified = true;
       digitalWrite(7, LOW);
-      delay(1000);
+      delay(800);
       digitalWrite(7, HIGH);
     
     sendATCommand("AT+CMGF=1"); 
     sendATCommand("AT+CMGS=\""+phoneNumber+"\""); // Replace with recipient's phone number
-  Serial3.print("Mr. X with RFID : "+String(mohamedTag[0],HEX)+" "+ String(mohamedTag[1],HEX)+" "+String(mohamedTag[2],HEX)+" "+String(mohamedTag[3],HEX)+" Started the car."); // Message content
+  Serial3.print("Prado Driver with Key RFID : "+String(mohamedTag[0],HEX)+" "+ String(mohamedTag[1],HEX)+" "+String(mohamedTag[2],HEX)+" "+String(mohamedTag[3],HEX)+" Started the car."); // Message content
   delay(100);
   Serial3.write(26); // ASCII code of CTRL+Z to send the SMS
   delay(1000); 
@@ -223,12 +223,12 @@ int getFingerprintIDez() {
   } else {
     Serial.println("Found a print match!");
     digitalWrite(7, LOW);
-    delay(1000);
+    delay(800);
     digitalWrite(7, HIGH);
     sendATCommand("AT+CMGF=1"); 
     sendATCommand("AT+CMGS=\""+phoneNumber+"\""); // Replace with recipient's phone number
     if(finger.fingerID == 1 || finger.fingerID == 2){
-      Serial3.print("Mr. X with fingerprint started the car."); // Message content
+      Serial3.print("Mr. Mohammed with fingerprint started the car."); // Message content
     }else if(finger.fingerID == 3 || finger.fingerID == 4){
       Serial3.print("Mr. Y with fingerprint started the car."); 
     }else if(finger.fingerID == 5 || finger.fingerID == 6){
