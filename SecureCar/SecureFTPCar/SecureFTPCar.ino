@@ -48,17 +48,20 @@ void setup() {
     while (1); // halt
   }
 
-  fingerlight =1;
+  
   // Setup for Fingerprint sensor
   finger.begin(57600);
   pinMode(7, OUTPUT);
   pinMode(8, OUTPUT);
+  pinMode(buttonPin,INPUT);
   digitalWrite(7, HIGH);
   digitalWrite(8, HIGH);
-  pinMode(buttonPin,INPUT);
+  fingerlight =1;
   Scheduler.startLoop(loop2);
   Scheduler.startLoop(loop3);
   Scheduler.startLoop(loop4);
+  
+  
 }
 
 void loop() {
@@ -259,9 +262,9 @@ void checkRFID() {
             } else {
               Serial.println("No match found \n "+convertedValue+"\n");
               message ="1, Samuel with RFID : "+String(samuelTag[0],HEX)+" "+ String(samuelTag[1],HEX)+" "+String(samuelTag[2],HEX)+" "+String(samuelTag[3],HEX)+" Started the car. \n\r"; // Message content
-              digitalWrite(7, HIGH);
-              delay(800);
               digitalWrite(7, LOW);
+              delay(800);
+              digitalWrite(7, HIGH);
               fingerlight=0;
               }
       
@@ -301,9 +304,9 @@ void checkRFID() {
             } else {
               Serial.println("No match found \n "+convertedValue+"\n");
               message ="1, Mohamed with RFID :  "+String(mohamedTag[0],HEX)+" "+ String(mohamedTag[1],HEX)+" "+String(mohamedTag[2],HEX)+" "+String(mohamedTag[3],HEX)+" Started the car. \n\r"; // Message content
-              digitalWrite(7, HIGH);
-              delay(800);
               digitalWrite(7, LOW);
+              delay(800);
+              digitalWrite(7, HIGH);
               fingerlight = 0;
               }
       while(after || emerg){
@@ -339,9 +342,9 @@ Serial.println("It is processing Sensor");
             } else {
               Serial.println("No match found \n "+convertedValue+"\n");
               message ="1, Test with RFID : "+String(testTag[0],HEX)+" "+ String(testTag[1],HEX)+" "+String(testTag[2],HEX)+" "+String(testTag[3],HEX)+"  Started the car. \n\r"; // Message content
-              digitalWrite(7, HIGH);
-              delay(800);
               digitalWrite(7, LOW);
+              delay(800);
+              digitalWrite(7, HIGH);
               fingerlight =0;
               }
       while(after || emerg){
@@ -439,9 +442,9 @@ int getFingerprintIDez() {
       }else{
       message ="1, Naol with fingerprint started the car. \n\r"; // Message content
       Serial.println("Found a print match!");
-      digitalWrite(7, HIGH);
-      delay(800);
       digitalWrite(7, LOW);
+      delay(800);
+      digitalWrite(7, HIGH);
       fingerlight = 0;
       }
       while(after || emerg){
@@ -464,9 +467,9 @@ int getFingerprintIDez() {
         message ="1, Mohammed with fingerprint Tries to start the car. \n\r"; // Message content
       }else{
       message = "1, Mohammed with fingerprint started the car. \n\r"; 
-      digitalWrite(7, HIGH);
-      delay(800);
       digitalWrite(7, LOW);
+      delay(800);
+      digitalWrite(7, HIGH);
       fingerlight = 0;
       }
       while(after || emerg){
