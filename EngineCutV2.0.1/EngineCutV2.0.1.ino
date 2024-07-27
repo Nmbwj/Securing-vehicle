@@ -8,14 +8,15 @@
 MFRC522 nfc(SAD, RST);
 Adafruit_Fingerprint_Due finger = Adafruit_Fingerprint_Due();
 
-byte samuelTag[5] = {0xC2, 0x55, 0x19, 0x20};
+byte samuelTag[5] = {0xC2, 0x55, 0x19, 0x20};// prado: 0xC2, 0x55, 0x19, 0x20 ,squaredtech 0x5D, 0xE5, 0xA2, 0x82
 byte mohamedTag[5] = {0x23, 0xCC, 0xD3, 0x1B};
 bool rfidVerified = false;
 bool fingerprintVerified = false;
 String senderNumber = "";
 bool messageReceived = false;
 String incomingMessage = "";
-String phoneNumber = "+251933660705";
+String phoneNumber = "+251911944286"; //+251933660705 CEO ,Prado +251911944286
+int fingerlight;
 
 void setup() {
   // Setup for Serial communication
@@ -43,12 +44,15 @@ void setup() {
   pinMode(8, OUTPUT);
   digitalWrite(7, HIGH);
   digitalWrite(8, HIGH);
+  fingerlight=1;
 }
 
 void loop() {
   //digitalWrite(22, LOW);
+  if(fingerlight){
   checkRFID();
   checkFingerprint();
+  }
 
   if (rfidVerified && fingerprintVerified) {
     Serial.println("Access Granted.");
@@ -154,6 +158,7 @@ void checkRFID() {
       digitalWrite(7, LOW);
       delay(800);
       digitalWrite(7, HIGH);
+      fingerlight=0;
     
     sendATCommand("AT+CMGF=1"); 
     sendATCommand("AT+CMGS=\""+phoneNumber+"\""); // Replace with recipient's phone number
@@ -162,11 +167,12 @@ void checkRFID() {
   Serial3.write(26); // ASCII code of CTRL+Z to send the SMS
   delay(1000); 
     }else if(memcmp(serial, mohamedTag, 4) == 0) {
-      Serial.println("Tag verified as Mr. X's RFID.");
+      Serial.println("Tag verified as M65r. X's RFID.");
       rfidVerified = true;
       digitalWrite(7, LOW);
       delay(800);
       digitalWrite(7, HIGH);
+      fingerlight=0;
     
     sendATCommand("AT+CMGF=1"); 
     sendATCommand("AT+CMGS=\""+phoneNumber+"\""); // Replace with recipient's phone number
@@ -175,7 +181,7 @@ void checkRFID() {
   Serial3.write(26); // ASCII code of CTRL+Z to send the SMS
   delay(1000); 
     } else {
-      Serial.println("Unknown RFID.");
+      Serial.println("Unknown RFID. "+String(serial[0],HEX)+" "+ String(serial[1],HEX)+" "+String(serial[2],HEX)+" "+String(serial[3],HEX)+"");
       rfidVerified = false;
       digitalWrite(3, HIGH);
     delay(100);
@@ -213,6 +219,7 @@ int getFingerprintIDez() {
     digitalWrite(3, HIGH);
     delay(100);
     digitalWrite(3, LOW);
+
     sendATCommand("AT+CMGF=1"); 
     sendATCommand("AT+CMGS=\""+phoneNumber+"\""); // Replace with recipient's phone number
     Serial3.print("Unknown person with fingerprint trys to start the car."); // Message content
@@ -222,17 +229,20 @@ int getFingerprintIDez() {
     return -1;
   } else {
     Serial.println("Found a print match!");
-    digitalWrite(7, LOW);
-    delay(800);
-    digitalWrite(7, HIGH);
+    if(finger.fingerID != 0){  
+      digitalWrite(7, LOW);
+      delay(800);
+      digitalWrite(7, HIGH);
+      fingerlight=0;
+    }
     sendATCommand("AT+CMGF=1"); 
     sendATCommand("AT+CMGS=\""+phoneNumber+"\""); // Replace with recipient's phone number
-    if(finger.fingerID == 1 || finger.fingerID == 2){
-      Serial3.print("Mr. Mohammed with fingerprint started the car."); // Message content
-    }else if(finger.fingerID == 3 || finger.fingerID == 4){
-      Serial3.print("Mr. Y with fingerprint started the car."); 
+
+    if(finger.fingerID == 3 || finger.fingerID == 4){
+      Serial3.print("Mr. Alex with fingerprint started the car.");
+
     }else if(finger.fingerID == 5 || finger.fingerID == 6){
-      Serial3.print("Mr. Z with fingerprint started the car.");
+      Serial3.print("Mr. Alex with fingerprint started the car.");
     }
     delay(100);
     Serial3.write(26); // ASCII code of CTRL+Z to send the SMS

@@ -33,7 +33,7 @@ String file1 = "\"status.csv\"";
 int buttonPin =9;
 int buttonRead;
 int after =0, emerg=0, net=1, i=1, j=1, m=1;
-
+int fingerlight;
 
 void setup() {
   // Setup for Serial communication
@@ -48,10 +48,10 @@ void setup() {
     while (1); // halt
   }
 
-
+  fingerlight =1;
   // Setup for Fingerprint sensor
   finger.begin(57600);
-  pinMode(13, OUTPUT);
+  pinMode(7, OUTPUT);
   pinMode(8, OUTPUT);
   digitalWrite(7, HIGH);
   digitalWrite(8, HIGH);
@@ -63,8 +63,12 @@ void setup() {
 
 void loop() {
   //digitalWrite(22, LOW);
-  checkRFID();
-  checkFingerprint();
+  if(fingerlight){
+    checkRFID();
+    checkFingerprint();
+
+  }
+  
 
   if (rfidVerified && fingerprintVerified) {
     Serial.println("Access Granted.");
@@ -118,7 +122,7 @@ void loop3(){
       Serial.println("It is in Emergency now");
     after =1;
     Serial.println("Button is working : "+ String(buttonRead));
-    message= "Emergency for car Plate Number: 5D E5 A2 82, \r"; // Message content
+    message= "1, Emergency for car Plate Number: 5D E5 A2 82 \n\r"; // Message content
     //file = "\"starteng.txt\""; // Temporarly changed to Starteng due to testing, the change to emergency.txt
     delay(100);
     setupFTP(url, username, password);
@@ -251,13 +255,14 @@ void checkRFID() {
           if (compareValue.indexOf(convertedValue) != -1) {
             Serial.println("Match found");
             Serial.println("This Driver is banned!");
-            message ="Samuel with RFID : 88 4 16 DA Tries to Start the car. , \r"; // Message content
+            message ="1, Samuel with RFID : "+String(samuelTag[0],HEX)+" "+ String(samuelTag[1],HEX)+" "+String(samuelTag[2],HEX)+" "+String(samuelTag[3],HEX)+" Tries to Start the car. \n \r"; // Message content
             } else {
               Serial.println("No match found \n "+convertedValue+"\n");
-              message ="Samuel with RFID : 88 4 16 DA Started the car. , \r"; // Message content
-              digitalWrite(13, HIGH);
-              delay(1000);
-              digitalWrite(13, LOW);
+              message ="1, Samuel with RFID : "+String(samuelTag[0],HEX)+" "+ String(samuelTag[1],HEX)+" "+String(samuelTag[2],HEX)+" "+String(samuelTag[3],HEX)+" Started the car. \n\r"; // Message content
+              digitalWrite(7, HIGH);
+              delay(800);
+              digitalWrite(7, LOW);
+              fingerlight=0;
               }
       
       
@@ -273,9 +278,9 @@ void checkRFID() {
         m = 1;
       Serial.println("It is processing Sensor");
       after=1;
-      /*setupFTP(url, username, password);
+      setupFTP(url, username, password);
       sendPUTFtp(file);
-      */
+      
       net = 0;
       //after=0;
       Serial.println("It has finished the sensor");
@@ -294,13 +299,14 @@ void checkRFID() {
           if (compareValue.indexOf(convertedValue) != -1) {
             Serial.println("Match found");
             Serial.println("This Driver is banned!");
-            message ="Mohamed with RFID : 5D E5 A2 82 Tries to Start the car. , \r"; // Message content
+            message ="1, Mohamed with RFID :  "+String(mohamedTag[0],HEX)+" "+ String(mohamedTag[1],HEX)+" "+String(mohamedTag[2],HEX)+" "+String(mohamedTag[3],HEX)+" Tries to Start the car. \n\r"; // Message content
             } else {
               Serial.println("No match found \n "+convertedValue+"\n");
-              message ="Mohamed with RFID : 5D E5 A2 82 Started the car. , \r"; // Message content
-              digitalWrite(13, HIGH);
-              delay(1000);
-              digitalWrite(13, LOW);
+              message ="1, Mohamed with RFID :  "+String(mohamedTag[0],HEX)+" "+ String(mohamedTag[1],HEX)+" "+String(mohamedTag[2],HEX)+" "+String(mohamedTag[3],HEX)+" Started the car. \n\r"; // Message content
+              digitalWrite(7, HIGH);
+              delay(800);
+              digitalWrite(7, LOW);
+              fingerlight = 0;
               }
       while(after || emerg){
         if(m){
@@ -314,9 +320,9 @@ void checkRFID() {
       Serial.println("It is processing Sensor");
       after=1;
       delay(100);
-      /*setupFTP(url, username, password);
+      setupFTP(url, username, password);
       sendPUTFtp(file);
-      after=0;*/
+      after=0;
       net = 0;
       Serial.println("It has finished the sensor");
   delay(1000); 
@@ -334,13 +340,14 @@ void checkRFID() {
           if (compareValue.indexOf(convertedValue) != -1) {
             Serial.println("Match found");
             Serial.println("This Driver is banned!");
-            message ="Test with RFID : 13 C1 90 FC Tries to Start the car. , \r"; // Message content
+            message ="1, Test with RFID :  "+String(testTag[0],HEX)+" "+ String(testTag[1],HEX)+" "+String(testTag[2],HEX)+" "+String(testTag[3],HEX)+" Tries to Start the car. \n\r"; // Message content
             } else {
               Serial.println("No match found \n "+convertedValue+"\n");
-              message ="Test with RFID : 13 C1 90 FC Started the car. , \r"; // Message content
-              digitalWrite(13, HIGH);
-              delay(1000);
-              digitalWrite(13, LOW);
+              message ="1, Test with RFID : "+String(testTag[0],HEX)+" "+ String(testTag[1],HEX)+" "+String(testTag[2],HEX)+" "+String(testTag[3],HEX)+"  Started the car. \n\r"; // Message content
+              digitalWrite(7, HIGH);
+              delay(800);
+              digitalWrite(7, LOW);
+              fingerlight =0;
               }
       while(after || emerg){
         if(m){
@@ -354,11 +361,11 @@ void checkRFID() {
   Serial.println("It is processing Sensor");  
   after=1;
   delay(100);
-  /*
+  
   setupFTP(url, username, password);
   sendPUTFtp(file);
   after=0;
-  */
+  
   net = 0;
   Serial.println("It has finished the sensor");
   delay(1000); 
@@ -381,12 +388,12 @@ void checkRFID() {
   Serial.println("It is processing Sensor");
   after=1;
   delay(100);
-  /*
+  
   setupFTP(url, username, password);
   sendPUTFtp(file);
   after=0;
-  */
-  message= "unknown person with RFID trys to start the car. , \r"; // Message content
+  
+  message= "1, Unknown RFID. "+String(serial[0],HEX)+" "+ String(serial[1],HEX)+" "+String(serial[2],HEX)+" "+String(serial[3],HEX)+" Tries to start the car. \n\r"; // Message content
   
   net = 0;
   Serial.println("It has finished the sensor");
@@ -431,12 +438,13 @@ int getFingerprintIDez() {
     Serial.println("It is processing Sensor");
     after=1;
     delay(100);
-    /*
+    message = "1, Unknown person with fingerprint trys to start the car. \n \r"; // Message content
+    
+    
     setupFTP(url, username, password);
     sendPUTFtp(file);
     after=0;
-    */
-    message = "unknown person with fingerprint trys to start the car. , \r"; // Message content
+    
     
     net = 0;
     Serial.println("It has finished the sensor");
@@ -446,13 +454,14 @@ int getFingerprintIDez() {
     
     if(finger.fingerID == 1 || finger.fingerID == 2){
       if((compareValue.indexOf("13 c1 90 fc") != -1)){
-        message ="Naol with fingerprint Tries to start the car. , \r"; // Message content
+        message ="1, Naol with fingerprint Tries to start the car. \n\r"; // Message content
       }else{
-      message ="Naol with fingerprint started the car. , \r"; // Message content
+      message ="1, Naol with fingerprint started the car. \n\r"; // Message content
       Serial.println("Found a print match!");
-      digitalWrite(13, HIGH);
-      delay(1000);
-      digitalWrite(13, LOW);
+      digitalWrite(7, HIGH);
+      delay(800);
+      digitalWrite(7, LOW);
+      fingerlight = 0;
       }
       while(after || emerg){
         if(m){
@@ -465,21 +474,23 @@ int getFingerprintIDez() {
         m = 1;
       Serial.println("It is processing Sensor");
       after=1;
-      /*
+      
     setupFTP(url, username, password);
     sendPUTFtp(file);
     after=0;
-    */
+    
     net =0;
+    
       Serial.println("It has finished the sensor");
     }else if(finger.fingerID == 3 || finger.fingerID == 4){
       if((compareValue.indexOf("5d e5 a2 82") != -1)){
-        message ="Mohammed with fingerprint Tries to start the car. , \r"; // Message content
+        message ="1, Mohammed with fingerprint Tries to start the car. \n\r"; // Message content
       }else{
-      message = "Mohammed with fingerprint started the car. , \r"; 
-      digitalWrite(13, HIGH);
-      delay(1000);
-      digitalWrite(13, LOW);
+      message = "1, Mohammed with fingerprint started the car. \n\r"; 
+      digitalWrite(7, HIGH);
+      delay(800);
+      digitalWrite(7, LOW);
+      fingerlight = 0;
       }
       while(after || emerg){
         if(m){
@@ -493,11 +504,11 @@ int getFingerprintIDez() {
       Serial.println("It is processing Sensor");
       after=1;
       delay(100);
-      /*
+      
     setupFTP(url, username, password);
     sendPUTFtp(file);
     after=0;
-    */
+    
     net = 0;
       Serial.println("It has finished the sensor");
     }
@@ -514,7 +525,7 @@ void sendGETFtp(String file)
 {
   sendATCommand("AT+FTPGETNAME="+file+"");
   delay(5000);
-  sendATCommand("AT+FTPGETPATH=\"/home/fleet/work/\"");
+  sendATCommand("AT+FTPGETPATH=\"/home/fleetstore/\"");
   delay(5000);
   sendATCommand("AT+FTPGET=1");
   delay(5000);
@@ -531,7 +542,7 @@ void sendPUTFtp(String file)
 {
   sendATCommand("AT+FTPPUTNAME="+file+"");
   delay(5000);
-  sendATCommand("AT+FTPPUTPATH=\"/home/fleet/work/\"");
+  sendATCommand("AT+FTPPUTPATH=\"/home/fleetstore/\"");
   delay(5000);
   sendATCommand("AT+FTPPUTOPT=\"APPE\""); // This should be on user specification.
   delay(5000);
