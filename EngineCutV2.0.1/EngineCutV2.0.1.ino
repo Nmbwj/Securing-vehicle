@@ -15,7 +15,7 @@ bool fingerprintVerified = false;
 String senderNumber = "";
 bool messageReceived = false;
 String incomingMessage = "";
-String phoneNumber = "+251911944286"; //+251933660705 CEO ,Prado +251911944286
+String phoneNumber = "+25177245580"; //+251933660705 CEO ,Prado +251911944286
 int fingerlight;
 
 void setup() {
