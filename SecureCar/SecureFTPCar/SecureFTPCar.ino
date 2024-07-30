@@ -447,9 +447,9 @@ int getFingerprintIDez() {
     
     if(finger.fingerID == 1 || finger.fingerID == 2){
       if((compareValue.indexOf("13 c1 90 fc") != -1)){
-        message ="1, Naol with fingerprint Tries to start the car.\n \r"; // Message content
+        message ="1, Mohammed with fingerprint Tries to start the car.\n \r"; // Message content
       }else{
-      message ="1, Naol with fingerprint started the car. \n\r"; // Message content
+      message ="1, Mohammed with fingerprint started the car. \n\r"; // Message content
       Serial.println("Found a print match!");
       emergecyabort =1;
       digitalWrite(7, LOW);
@@ -472,11 +472,11 @@ int getFingerprintIDez() {
       net =0;
     
       Serial.println("It has finished the sensor");
-    }else if(finger.fingerID == 3 || finger.fingerID == 4){
+    }else if(finger.fingerID == 5 || finger.fingerID == 6){
       if((compareValue.indexOf("5d e5 a2 82") != -1)){
-        message ="1, Mohammed with fingerprint Tries to start the car. \n\r"; // Message content
+        message ="1, Naol with fingerprint Tries to start the car. \n\r"; // Message content
       }else{
-      message = "1, Mohammed with fingerprint started the car. \n\r"; 
+      message = "1, Naol with fingerprint started the car. \n\r"; 
       emergecyabort =1;
       digitalWrite(7, LOW);
       delay(800);
@@ -548,6 +548,7 @@ void setupFTP(String url, String username, String password){
   // THIS IS FTP
   //START  CONFIGURATION AND COMMUNICATION
   //START GPRS BARRIER
+  delay(10000);
   sendATCommand("AT+SAPBR=3,1,\"Contype\",\"GPRS\"");  
   delay(3000);
   sendATCommand("AT+SAPBR=3,1,\"APN\",\"etc.com\""); // APN configuration
