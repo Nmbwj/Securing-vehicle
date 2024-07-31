@@ -30,7 +30,7 @@ String password = "\"9QajNJs9xa67guInVk75HqSl1bTtni57\"";
 String file = "\"A30.csv\"";
 String file1 = "\"status.csv\"";
 
-int buttonPin =22;
+int buttonPin =5;
 int buttonRead =0;
 int after =0, emerg=0, net=1, i=1, j=1, m=1;
 int fingerlight;
@@ -129,7 +129,7 @@ void loop3(){
       Serial.println("It is in Emergency now");
     after =1;
     Serial.println("Button is working : "+ String(buttonRead));
-    message= "1, Emergency for car Plate Number: 5D E5 A2 82 \n\r"; // Message content
+    message= "1, Emergency for car Plate Number: B31287 A.A 03 \n\r"; // Message content
     //file = "\"starteng.txt\""; // Temporarly changed to Starteng due to testing, the change to emergency.txt
     delay(100);
     setupFTP(url, username, password);
