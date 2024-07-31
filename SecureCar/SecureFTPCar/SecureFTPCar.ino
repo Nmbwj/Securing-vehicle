@@ -215,6 +215,7 @@ void processMessage(String message)
     if (message.indexOf("enginecut") != -1)
     {
       //digitalWrite(8, HIGH); // Set pin 2 HIGH
+      emergecyabort =1;
       digitalWrite(8, LOW);
       //delay(3500);
       //digitalWrite(8, HIGH);
@@ -224,6 +225,7 @@ void processMessage(String message)
     
 
     }else if (message.indexOf("engineon") != -1){
+      emergecyabort =1;
       digitalWrite(8, HIGH);
       
 
