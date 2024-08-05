@@ -15,7 +15,7 @@ bool fingerprintVerified = false;
 String senderNumber = "";
 bool messageReceived = false;
 String incomingMessage = "";
-String phoneNumber = "+25177245580"; //+251933660705 CEO ,Prado +251911944286
+String phoneNumber = "+251977245580"; //+251933660705 CEO ,Prado +251911944286
 int fingerlight;
 
 void setup() {
@@ -137,7 +137,20 @@ void processMessage(String message, String sender)
       Serial3.print("Engine is on!."); // Message content
       delay(100);
       Serial3.write(26);
+    }else if (message.indexOf("startengine") != -1){
+
+      digitalWrite(7, LOW);
+      delay(800);
+      digitalWrite(7, HIGH);
+      fingerlight=0;
+      sendATCommand("AT+CMGF=1"); 
+      sendATCommand("AT+CMGS=\""+phoneNumber+"\""); // Replace with recipient's phone number
+      Serial3.print("Engine is on!."); // Message content
+      delay(100);
+      Serial3.write(26);
+
     }
+
   }
 }
 void checkRFID() {

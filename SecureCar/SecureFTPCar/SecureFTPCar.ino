@@ -69,11 +69,13 @@ void setup() {
 
 void loop() {
   //digitalWrite(22, LOW);
-  if(fingerlight){
+  if(fingerlight)
+  {
     checkRFID();
     checkFingerprint();
-
   }
+
+  
   
 
   if (rfidVerified && fingerprintVerified) {
@@ -415,13 +417,16 @@ void checkFingerprint() {
 
 // Returns -1 if failed, otherwise returns ID #
 int getFingerprintIDez() {
-  uint8_t p = finger.getImage();
+  uint8_t p;
+  //if(fingerlight){
+  p = finger.getImage();
   if (p != FINGERPRINT_OK) return -1;
   
   p = finger.image2Tz();
   if (p != FINGERPRINT_OK) return -1;
   
   p = finger.fingerFastSearch();
+  //}
   if (p != FINGERPRINT_OK) {
     Serial.println("Fingerprint do not match!");
     digitalWrite(3, HIGH);
