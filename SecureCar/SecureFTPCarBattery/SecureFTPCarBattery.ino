@@ -19,6 +19,7 @@ String incomingMessage = "";
 String message;
 String compareValue;
 int on=1;
+int cutted=0;
 /*
 String url = "\"eu-central-1.sftpcloud.io\"";
 String username = "\"4c9f4fb87fbb4c599e13cd6f637985ea\"";
@@ -223,6 +224,7 @@ void processMessage(String message)
       digitalWrite(8, LOW);
       //delay(3500);
       //digitalWrite(8, HIGH);
+      cutted=1;
       on = 1;
       message = "Engine is Stoped!. \n If you want give access grand send \"engineon\" "; // Message content
       Serial.println(message);
@@ -232,6 +234,7 @@ void processMessage(String message)
     }else if (message.indexOf("engineon") != -1){
       emergecyabort =1;
       digitalWrite(8, HIGH);
+      cutted=0;
       on = 1;
       message ="Engine is on!."; // Message content
       Serial.println(message);
@@ -282,10 +285,13 @@ void checkRFID() {
               on = 0;
               //fingerlight=0;
               }else{
-                digitalWrite(8, LOW);
-                on = 1;
-                message ="1, Samuel with RFID : "+String(samuelTag[0],HEX)+" "+ String(samuelTag[1],HEX)+" "+String(samuelTag[2],HEX)+" "+String(samuelTag[3],HEX)+" Stoped the car. \n\r"; // Message content
-
+                if(!cutted){
+                  digitalWrite(8, LOW);
+                  delay(100);
+                  digitalWrite(8, HIGH);
+                  on = 1;
+                  message ="1, Samuel with RFID : "+String(samuelTag[0],HEX)+" "+ String(samuelTag[1],HEX)+" "+String(samuelTag[2],HEX)+" "+String(samuelTag[3],HEX)+" Stoped the car. \n\r"; // Message content
+                }
               }
             }
       
@@ -333,10 +339,13 @@ void checkRFID() {
               on = 0;
               //fingerlight=0;
               }else{
-                digitalWrite(8, LOW);
-                on = 1;
-                message ="1, Mohammed with RFID : "+String(mohamedTag[0],HEX)+" "+ String(mohamedTag[1],HEX)+" "+String(mohamedTag[2],HEX)+" "+String(mohamedTag[3],HEX)+" Stoped the car. \n\r"; // Message content
-
+                if(!cutted){
+                  digitalWrite(8, LOW);
+                  delay(100);
+                  digitalWrite(8, HIGH);
+                  on = 1;
+                  message ="1, Mohammed with RFID : "+String(mohamedTag[0],HEX)+" "+ String(mohamedTag[1],HEX)+" "+String(mohamedTag[2],HEX)+" "+String(mohamedTag[3],HEX)+" Stoped the car. \n\r"; // Message content
+                }
               }
 
               }
@@ -381,10 +390,13 @@ void checkRFID() {
               on = 0;
               //fingerlight=0;
               }else{
-                digitalWrite(8, LOW);
-                on = 1;
-                message ="1, Test with RFID : "+String(testTag[0],HEX)+" "+ String(testTag[1],HEX)+" "+String(testTag[2],HEX)+" "+String(testTag[3],HEX)+" Stoped the car. \n\r"; // Message content
-
+                if(!cutted){
+                  digitalWrite(8, LOW);
+                  delay(100);
+                  digitalWrite(8, HIGH);
+                  on = 1;
+                  message ="1, Test with RFID : "+String(testTag[0],HEX)+" "+ String(testTag[1],HEX)+" "+String(testTag[2],HEX)+" "+String(testTag[3],HEX)+" Stoped the car. \n\r"; // Message content
+                } 
               }
             }
       while(after || emerg){

@@ -17,6 +17,7 @@ bool messageReceived = false;
 String incomingMessage = "";
 String phoneNumber = "+251977245580"; //+251933660705 CEO ,Prado +251911944286
 int on=1;
+int cutted=0;
 
 void setup() {
   // Setup for Serial communication
@@ -125,6 +126,7 @@ void processMessage(String message, String sender)
       digitalWrite(8, LOW);
       //delay(3500);
       //digitalWrite(8, HIGH);
+      cutted=1;
       on = 1;
       sendATCommand("AT+CMGF=1"); 
       sendATCommand("AT+CMGS=\""+phoneNumber+"\""); // Replace with recipient's phone number
@@ -134,6 +136,7 @@ void processMessage(String message, String sender)
 
     }else if (message.indexOf("engineon") != -1){
       digitalWrite(8, HIGH);
+      cutted=0;
       on = 1;
       sendATCommand("AT+CMGF=1"); 
       sendATCommand("AT+CMGS=\""+phoneNumber+"\""); // Replace with recipient's phone number
@@ -185,13 +188,17 @@ void checkRFID() {
         delay(1000);
       
       }else{
+        if(!cutted){
         digitalWrite(8, LOW);
+        delay(100);
+        digitalWrite(8, HIGH);
         on = 1;
         sendATCommand("AT+CMGF=1"); 
         sendATCommand("AT+CMGS=\""+phoneNumber+"\""); // Replace with recipient's phone number
         Serial3.print("Engine is Stoped!. \n If you want give access grand send \"startengine\" "); // Message content
         delay(100);
         Serial3.write(26);
+        }
       }
     }else if(memcmp(serial, mohamedTag, 4) == 0) {
       Serial.println("Tag verified as Mr. X's RFID.");
@@ -208,15 +215,20 @@ void checkRFID() {
         Serial3.write(26); // ASCII code of CTRL+Z to send the SMS
         delay(1000);
       }else{
-        digitalWrite(8, LOW);
-        on = 1;
-        sendATCommand("AT+CMGF=1"); 
-        sendATCommand("AT+CMGS=\""+phoneNumber+"\""); // Replace with recipient's phone number
-        Serial3.print("Engine is Stoped!. \n If you want give access grand send \"startengine\" "); // Message content
-        delay(100);
-        Serial3.write(26);
+        if(!cutted){
+          digitalWrite(8, LOW);
+          delay(100);
+          digitalWrite(8, HIGH);
+          on = 1;
+          sendATCommand("AT+CMGF=1");
+          sendATCommand("AT+CMGS=\""+phoneNumber+"\""); // Replace with recipient's phone number
+          Serial3.print("Engine is Stoped!. \n If you want give access grand send \"startengine\" "); // Message content
+          delay(100);
+          Serial3.write(26);
+        }
       }
-    } else {
+      
+    }else {
       Serial.println("Unknown RFID. "+String(serial[0],HEX)+" "+ String(serial[1],HEX)+" "+String(serial[2],HEX)+" "+String(serial[3],HEX)+"");
       rfidVerified = false;
       digitalWrite(3, HIGH);
