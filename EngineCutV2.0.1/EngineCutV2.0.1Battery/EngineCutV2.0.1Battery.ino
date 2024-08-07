@@ -265,12 +265,13 @@ int getFingerprintIDez() {
     return -1;
   } else {
     Serial.println("Found a print match!");
-    if(finger.fingerID != 0){  
+    if(finger.fingerID != 0 ){  
       digitalWrite(7, LOW);
       delay(800);
       digitalWrite(7, HIGH);
       //fingerlight=0;
-    }
+      on = 0;
+    }    
     sendATCommand("AT+CMGF=1"); 
     sendATCommand("AT+CMGS=\""+phoneNumber+"\""); // Replace with recipient's phone number
 
@@ -280,9 +281,11 @@ int getFingerprintIDez() {
     }else if(finger.fingerID == 5 || finger.fingerID == 6){
       Serial3.print("Mr. Alex with fingerprint started the car.");
     }
+    
     delay(100);
     Serial3.write(26); // ASCII code of CTRL+Z to send the SMS
-    delay(1000); 
+    delay(1000);
+    
     Serial.print("Found ID #");
     Serial.print(finger.fingerID); 
     Serial.print(" with confidence of ");
