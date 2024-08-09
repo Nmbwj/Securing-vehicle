@@ -15,7 +15,7 @@ bool fingerprintVerified = false;
 String senderNumber = "";
 bool messageReceived = false;
 String incomingMessage = "";
-String phoneNumber = "+251977245580"; //+251933660705 CEO ,Prado +251911944286
+String phoneNumber = "+251946710563"; //+251933660705 CEO ,Prado +251911944286
 int on=1;
 int cutted=0;
 
@@ -128,6 +128,7 @@ void processMessage(String message, String sender)
       //digitalWrite(8, HIGH);
       cutted=1;
       on = 1;
+      delay(100);
       sendATCommand("AT+CMGF=1"); 
       sendATCommand("AT+CMGS=\""+phoneNumber+"\""); // Replace with recipient's phone number
       Serial3.print("Engine is Stoped!. \n If you want give access grand send \"engineon\" "); // Message content
@@ -138,13 +139,15 @@ void processMessage(String message, String sender)
       digitalWrite(8, HIGH);
       cutted=0;
       on = 1;
+      delay(100);
       sendATCommand("AT+CMGF=1"); 
       sendATCommand("AT+CMGS=\""+phoneNumber+"\""); // Replace with recipient's phone number
       Serial3.print("Engine is on!."); // Message content
       delay(100);
       Serial3.write(26);
     }else if (message.indexOf("startengine") != -1){
-
+      //Serial3.print("Engine is started!");
+      
       digitalWrite(7, LOW);
       delay(800);
       digitalWrite(7, HIGH);
@@ -155,6 +158,7 @@ void processMessage(String message, String sender)
       Serial3.print("Engine is on!."); // Message content
       delay(100);
       Serial3.write(26);
+      
 
     }
 
@@ -190,9 +194,10 @@ void checkRFID() {
       }else{
         if(!cutted){
         digitalWrite(8, LOW);
-        delay(100);
+        delay(1000);
         digitalWrite(8, HIGH);
         on = 1;
+        delay(100);
         sendATCommand("AT+CMGF=1"); 
         sendATCommand("AT+CMGS=\""+phoneNumber+"\""); // Replace with recipient's phone number
         Serial3.print("Engine is Stoped!. \n If you want give access grand send \"startengine\" "); // Message content
@@ -208,6 +213,7 @@ void checkRFID() {
         delay(800);
         digitalWrite(7, HIGH);
         on = 0;
+        delay(100);
         sendATCommand("AT+CMGF=1");
         sendATCommand("AT+CMGS=\""+phoneNumber+"\""); // Replace with recipient's phone number
         Serial3.print("Squared-Tech Driver with Card RFID : "+String(mohamedTag[0],HEX)+" "+ String(mohamedTag[1],HEX)+" "+String(mohamedTag[2],HEX)+" "+String(mohamedTag[3],HEX)+" Started the car."); // Message content
@@ -217,9 +223,10 @@ void checkRFID() {
       }else{
         if(!cutted){
           digitalWrite(8, LOW);
-          delay(100);
+          delay(1000);
           digitalWrite(8, HIGH);
           on = 1;
+          delay(100);
           sendATCommand("AT+CMGF=1");
           sendATCommand("AT+CMGS=\""+phoneNumber+"\""); // Replace with recipient's phone number
           Serial3.print("Engine is Stoped!. \n If you want give access grand send \"startengine\" "); // Message content
@@ -227,7 +234,7 @@ void checkRFID() {
           Serial3.write(26);
         }
       }
-      
+
     }else {
       Serial.println("Unknown RFID. "+String(serial[0],HEX)+" "+ String(serial[1],HEX)+" "+String(serial[2],HEX)+" "+String(serial[3],HEX)+"");
       rfidVerified = false;
@@ -283,7 +290,8 @@ int getFingerprintIDez() {
       digitalWrite(7, HIGH);
       //fingerlight=0;
       on = 0;
-    }    
+    }
+    delay(100);    
     sendATCommand("AT+CMGF=1"); 
     sendATCommand("AT+CMGS=\""+phoneNumber+"\""); // Replace with recipient's phone number
 

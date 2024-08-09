@@ -8,14 +8,18 @@
 MFRC522 nfc(SAD, RST);
 Adafruit_Fingerprint_Due finger = Adafruit_Fingerprint_Due();
 
-byte samuelTag[5] = {0x5D, 0xE5, 0xA2, 0x82};// prado: 0xC2, 0x55, 0x19, 0x20 ,squaredtech 0x5D, 0xE5, 0xA2, 0x82
+byte samuelTag[5] = {0xC2, 0x55, 0x19, 0x20};// prado: 0xC2, 0x55, 0x19, 0x20 ,squaredtech 0x5D, 0xE5, 0xA2, 0x82
 byte mohamedTag[5] = {0x23, 0xCC, 0xD3, 0x1B};
+byte mohamedTag1[5] = {0x33, 0x8B, 0x91, 0xFC};
+byte mohamedTag2[5] = {0x13, 0xC1, 0x90, 0xFC};
+byte mohamedTag3[5] = {0x21, 0x7E, 0x6A, 0x4C};
+
 bool rfidVerified = false;
 bool fingerprintVerified = false;
 String senderNumber = "";
 bool messageReceived = false;
 String incomingMessage = "";
-String phoneNumber = "+251977245580"; //+251933660705 CEO ,Prado +251911944286
+String phoneNumber = "+251911944286"; //+251933660705 CEO ,Prado +251911944286
 int fingerlight;
 
 void setup() {
@@ -100,7 +104,7 @@ void updateSerialSmsRecive()
         // Process the message
         processMessage(messageContent, senderNumber);
 
-        // Clear the buffers
+        // Clear the buffers+251977245580
         incomingMessage = "";
         senderNumber = "";
         messageReceived = false;
@@ -193,7 +197,49 @@ void checkRFID() {
   delay(100);
   Serial3.write(26); // ASCII code of CTRL+Z to send the SMS
   delay(1000); 
-    } else {
+    }else if(memcmp(serial, mohamedTag1, 4) == 0) {
+      Serial.println("Tag verified as M65r. X's RFID.");
+      rfidVerified = true;
+      digitalWrite(7, LOW);
+      delay(800);
+      digitalWrite(7, HIGH);
+      fingerlight=0;
+    
+    sendATCommand("AT+CMGF=1"); 
+    sendATCommand("AT+CMGS=\""+phoneNumber+"\""); // Replace with recipient's phone number
+  Serial3.print("Prado Driver with Key RFID : "+String(mohamedTag1[0],HEX)+" "+ String(mohamedTag1[1],HEX)+" "+String(mohamedTag1[2],HEX)+" "+String(mohamedTag1[3],HEX)+" Started the car."); // Message content
+  delay(100);
+  Serial3.write(26); // ASCII code of CTRL+Z to send the SMS
+  delay(1000); 
+    }else if(memcmp(serial, mohamedTag2, 4) == 0) {
+      Serial.println("Tag verified as M65r. X's RFID.");
+      rfidVerified = true;
+      digitalWrite(7, LOW);
+      delay(800);
+      digitalWrite(7, HIGH);
+      fingerlight=0;
+    
+    sendATCommand("AT+CMGF=1"); 
+    sendATCommand("AT+CMGS=\""+phoneNumber+"\""); // Replace with recipient's phone number
+  Serial3.print("Prado Driver with Key RFID : "+String(mohamedTag2[0],HEX)+" "+ String(mohamedTag2[1],HEX)+" "+String(mohamedTag2[2],HEX)+" "+String(mohamedTag2[3],HEX)+" Started the car."); // Message content
+  delay(100);
+  Serial3.write(26); // ASCII code of CTRL+Z to send the SMS
+  delay(1000); 
+    }else if(memcmp(serial, mohamedTag3, 4) == 0) {
+      Serial.println("Tag verified as M65r. X's RFID.");
+      rfidVerified = true;
+      digitalWrite(7, LOW);
+      delay(800);
+      digitalWrite(7, HIGH);
+      fingerlight=0;
+    
+    sendATCommand("AT+CMGF=1"); 
+    sendATCommand("AT+CMGS=\""+phoneNumber+"\""); // Replace with recipient's phone number
+  Serial3.print("Prado Driver with Key RFID : "+String(mohamedTag3[0],HEX)+" "+ String(mohamedTag3[1],HEX)+" "+String(mohamedTag3[2],HEX)+" "+String(mohamedTag3[3],HEX)+" Started the car."); // Message content
+  delay(100);
+  Serial3.write(26); // ASCII code of CTRL+Z to send the SMS
+  delay(1000); 
+    }else {
       Serial.println("Unknown RFID. "+String(serial[0],HEX)+" "+ String(serial[1],HEX)+" "+String(serial[2],HEX)+" "+String(serial[3],HEX)+"");
       rfidVerified = false;
       digitalWrite(3, HIGH);
@@ -250,11 +296,11 @@ int getFingerprintIDez() {
     }
     sendATCommand("AT+CMGF=1"); 
     sendATCommand("AT+CMGS=\""+phoneNumber+"\""); // Replace with recipient's phone number
-
-    if(finger.fingerID == 3 || finger.fingerID == 4){
+    // Alex has id of 1,2,3,4,5,6 and mohammed has id 0 on prado car
+    if(finger.fingerID == 1 || finger.fingerID == 3 || finger.fingerID == 4){
       Serial3.print("Mr. Alex with fingerprint started the car.");
 
-    }else if(finger.fingerID == 5 || finger.fingerID == 6){
+    }else if(finger.fingerID == 2 || finger.fingerID == 5 || finger.fingerID == 6){
       Serial3.print("Mr. Alex with fingerprint started the car.");
     }
     delay(100);
