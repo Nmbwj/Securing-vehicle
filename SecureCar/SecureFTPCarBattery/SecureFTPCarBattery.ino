@@ -280,34 +280,34 @@ void checkRFID() {
           convertedValue += " ";
           }
           convertedValue += String(samuelTag[i], HEX);
-          }
+      }
           // Compare the converted value with the compareValue
-          if (compareValue.indexOf(convertedValue) != -1) {
-            Serial.println("Match found");
-            Serial.println("This Driver is banned!");
-            message ="1, Samuel with RFID : "+String(samuelTag[0],HEX)+" "+ String(samuelTag[1],HEX)+" "+String(samuelTag[2],HEX)+" "+String(samuelTag[3],HEX)+" Tries to Start the car.  \n\r"; // Message content
-            } else {
-              Serial.println("No match found \n "+convertedValue+"\n");
-              if(on){
-              message ="1, Samuel with RFID : "+String(samuelTag[0],HEX)+" "+ String(samuelTag[1],HEX)+" "+String(samuelTag[2],HEX)+" "+String(samuelTag[3],HEX)+" Started the car. \n\r"; // Message content
-              emergecyabort =1;
-              digitalWrite(7, LOW);
-              delay(800);
-              digitalWrite(7, HIGH);
-              on = 0;
-              delay(100);
-              //fingerlight=0;
-              }else{
-                if(!cutted){
-                  digitalWrite(8, LOW);
-                  delay(100);
-                  digitalWrite(8, HIGH);
-                  on = 1;
-                  message ="1, Samuel with RFID : "+String(samuelTag[0],HEX)+" "+ String(samuelTag[1],HEX)+" "+String(samuelTag[2],HEX)+" "+String(samuelTag[3],HEX)+" Stoped the car. \n\r"; // Message content
-                  delay(100);
-                }
+      if (compareValue.indexOf(convertedValue) != -1) {
+        Serial.println("Match found");
+        Serial.println("This Driver is banned!");
+        message ="1, Samuel with RFID : "+String(samuelTag[0],HEX)+" "+ String(samuelTag[1],HEX)+" "+String(samuelTag[2],HEX)+" "+String(samuelTag[3],HEX)+" Tries to Start the car.  \n\r"; // Message content
+        } else {
+          Serial.println("No match found \n "+convertedValue+"\n");
+          if(on){
+            message ="1, Samuel with RFID : "+String(samuelTag[0],HEX)+" "+ String(samuelTag[1],HEX)+" "+String(samuelTag[2],HEX)+" "+String(samuelTag[3],HEX)+" Started the car. \n\r"; // Message content
+            emergecyabort =1;
+            digitalWrite(7, LOW);
+            delay(800);
+            digitalWrite(7, HIGH);
+            on = 0;
+            delay(100);
+            //fingerlight=0;
+            }else{
+              if(!cutted){
+                digitalWrite(8, LOW);
+                delay(1000);
+                digitalWrite(8, HIGH);
+                on = 1;
+                message ="1, Samuel with RFID : "+String(samuelTag[0],HEX)+" "+ String(samuelTag[1],HEX)+" "+String(samuelTag[2],HEX)+" "+String(samuelTag[3],HEX)+" Stoped the car. \n\r"; // Message content
+                delay(100);
               }
             }
+          }
       
       
       delay(100);
@@ -356,7 +356,7 @@ void checkRFID() {
               }else{
                 if(!cutted){
                   digitalWrite(8, LOW);
-                  delay(100);
+                  delay(1000);
                   digitalWrite(8, HIGH);
                   on = 1;
                   message ="1, Mohammed with RFID : "+String(mohamedTag[0],HEX)+" "+ String(mohamedTag[1],HEX)+" "+String(mohamedTag[2],HEX)+" "+String(mohamedTag[3],HEX)+" Stoped the car. \n\r"; // Message content
@@ -409,7 +409,7 @@ void checkRFID() {
               }else{
                 if(!cutted){
                   digitalWrite(8, LOW);
-                  delay(100);
+                  delay(1000);
                   digitalWrite(8, HIGH);
                   on = 1;
                   message ="1, Test with RFID : "+String(testTag[0],HEX)+" "+ String(testTag[1],HEX)+" "+String(testTag[2],HEX)+" "+String(testTag[3],HEX)+" Stoped the car. \n\r"; // Message content
