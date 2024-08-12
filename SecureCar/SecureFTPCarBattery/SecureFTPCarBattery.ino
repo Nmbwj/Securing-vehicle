@@ -147,7 +147,7 @@ void loop3(){
   }
   emerg =0;
   yield();
-  delay(1000);
+  delay(1500);
   emergecyabort= 0;
   
 }
@@ -299,6 +299,7 @@ void checkRFID() {
             //fingerlight=0;
             }else{
               if(!cutted){
+                emergecyabort =1;
                 digitalWrite(8, LOW);
                 delay(1000);
                 digitalWrite(8, HIGH);
@@ -355,6 +356,7 @@ void checkRFID() {
               //fingerlight=0;
               }else{
                 if(!cutted){
+                  emergecyabort =1;
                   digitalWrite(8, LOW);
                   delay(1000);
                   digitalWrite(8, HIGH);
@@ -408,6 +410,7 @@ void checkRFID() {
               //fingerlight=0;
               }else{
                 if(!cutted){
+                  emergecyabort =1;
                   digitalWrite(8, LOW);
                   delay(1000);
                   digitalWrite(8, HIGH);
