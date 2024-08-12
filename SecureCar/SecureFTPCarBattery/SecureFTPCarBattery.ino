@@ -18,6 +18,7 @@ bool messageReceived = false;
 String incomingMessage = "";
 String message;
 String compareValue;
+String convertedValue;
 int on=1;
 int cutted=0;
 /*
@@ -274,7 +275,7 @@ void checkRFID() {
     if (memcmp(serial, samuelTag, 4) == 0) {
       Serial.println("Tag verified as Samuel's RFID.");
       rfidVerified = true;
-      String convertedValue;
+      convertedValue="";
       for (int i = 0; i < sizeof(samuelTag) -1; i++) {
         if (i > 0) {
           convertedValue += " ";
@@ -331,7 +332,7 @@ void checkRFID() {
     }else if(memcmp(serial, mohamedTag, 4) == 0) {
       Serial.println("Tag verified as Mohamed's RFID.");
       rfidVerified = true;
-      String convertedValue;
+      convertedValue="";
       for (int i = 0; i < sizeof(mohamedTag) -1; i++) {
         if (i > 0) {
           convertedValue += " ";
@@ -342,11 +343,11 @@ void checkRFID() {
           if (compareValue.indexOf(convertedValue) != -1) {
             Serial.println("Match found");
             Serial.println("This Driver is banned!");
-            message ="1, Mohamed with RFID :  "+String(mohamedTag[0],HEX)+" "+ String(mohamedTag[1],HEX)+" "+String(mohamedTag[2],HEX)+" "+String(mohamedTag[3],HEX)+" Tries to Start the car. \n\r"; // Message content
+            message ="1, Naol with RFID :  "+String(mohamedTag[0],HEX)+" "+ String(mohamedTag[1],HEX)+" "+String(mohamedTag[2],HEX)+" "+String(mohamedTag[3],HEX)+" Tries to Start the car. \n\r"; // Message content
             } else {
               Serial.println("No match found \n "+convertedValue+"\n");
               if(on){
-              message ="1, Mohammed with RFID : "+String(mohamedTag[0],HEX)+" "+ String(mohamedTag[1],HEX)+" "+String(mohamedTag[2],HEX)+" "+String(mohamedTag[3],HEX)+" Started the car. \n\r"; // Message content
+              message ="1, Naol with RFID : "+String(mohamedTag[0],HEX)+" "+ String(mohamedTag[1],HEX)+" "+String(mohamedTag[2],HEX)+" "+String(mohamedTag[3],HEX)+" Started the car. \n\r"; // Message content
               emergecyabort =1;
               digitalWrite(7, LOW);
               delay(800);
@@ -361,7 +362,7 @@ void checkRFID() {
                   delay(1000);
                   digitalWrite(8, HIGH);
                   on = 1;
-                  message ="1, Mohammed with RFID : "+String(mohamedTag[0],HEX)+" "+ String(mohamedTag[1],HEX)+" "+String(mohamedTag[2],HEX)+" "+String(mohamedTag[3],HEX)+" Stoped the car. \n\r"; // Message content
+                  message ="1, Naol with RFID : "+String(mohamedTag[0],HEX)+" "+ String(mohamedTag[1],HEX)+" "+String(mohamedTag[2],HEX)+" "+String(mohamedTag[3],HEX)+" Stoped the car. \n\r"; // Message content
                   delay(100);
                 }
               }
@@ -385,7 +386,7 @@ void checkRFID() {
     }else if(memcmp(serial, testTag, 4) == 0) {
       Serial.println("Tag verified as Test Card's RFID.");
       rfidVerified = true;
-      String convertedValue;
+      convertedValue="";
       for (int i = 0; i < sizeof(testTag) -1; i++) {
         if (i > 0) {
           convertedValue += " ";
