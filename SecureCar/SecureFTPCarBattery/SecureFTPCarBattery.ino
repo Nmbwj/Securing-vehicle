@@ -179,22 +179,24 @@ void updateSerialSmsRecive()
     incomingMessage += c;
     
     // Check for new message indicator +CMT:
-    if (incomingMessage.indexOf("+FTPGET:") != -1)
+    if (incomingMessage.indexOf("+FTPGET:2") != -1)
     {
       messageReceived = true;
       //Serial.println("Match found: +FTPGET: ");
     }
     
     // Check if the message content has started
-    if (messageReceived && incomingMessage.indexOf("\r\n", incomingMessage.indexOf("+FTPGET:")) != -1)
+    if (messageReceived && incomingMessage.indexOf("\r\n", incomingMessage.indexOf("+FTPGET:2")) != -1)
     {
-      int messageStart = incomingMessage.indexOf("\r\n", incomingMessage.indexOf("+FTPGET:")) + 15;
+      int messageStart = incomingMessage.indexOf("\r\n", incomingMessage.indexOf("+FTPGET:2")) + 15;
       
-      if (incomingMessage.indexOf("\r\n", messageStart) != -1)
+      if (incomingMessage.indexOf("stop", messageStart) != -1)
       {
-        String messageContent = incomingMessage.substring(messageStart, incomingMessage.indexOf("\r\n", messageStart));
+        String messageContent = incomingMessage.substring(messageStart, incomingMessage.indexOf("stop", messageStart));
+        
         messageContent.trim();
         //Serial.println("Match found:"+messageContent+" :\n ");
+        //Serial.println("Match found income start:"+incomingMessage+" : income is done\n ");
         compareValue = messageContent;
         
         compareValue.toLowerCase();
