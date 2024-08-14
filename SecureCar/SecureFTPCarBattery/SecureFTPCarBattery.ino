@@ -102,7 +102,7 @@ void loop2(){
     }
     j=1;
   Serial.println("Now it not in Emergency or out of Emergency so lets update the EngineCut");
-  delay(300000);
+  delay(300000); // 300000
   while(after || emerg){
     //Serial.println("It has been Queed by sensor or Emergency come on!.");
     yield();
@@ -182,17 +182,19 @@ void updateSerialSmsRecive()
     if (incomingMessage.indexOf("+FTPGET:") != -1)
     {
       messageReceived = true;
+      //Serial.println("Match found: +FTPGET: ");
     }
     
     // Check if the message content has started
     if (messageReceived && incomingMessage.indexOf("\r\n", incomingMessage.indexOf("+FTPGET:")) != -1)
     {
-      int messageStart = incomingMessage.indexOf("\r\n", incomingMessage.indexOf("+FTPGET:")) + 2;
+      int messageStart = incomingMessage.indexOf("\r\n", incomingMessage.indexOf("+FTPGET:")) + 15;
+      
       if (incomingMessage.indexOf("\r\n", messageStart) != -1)
       {
         String messageContent = incomingMessage.substring(messageStart, incomingMessage.indexOf("\r\n", messageStart));
         messageContent.trim();
-
+        //Serial.println("Match found:"+messageContent+" :\n ");
         compareValue = messageContent;
         
         compareValue.toLowerCase();
