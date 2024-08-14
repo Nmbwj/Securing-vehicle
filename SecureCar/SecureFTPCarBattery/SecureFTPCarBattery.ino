@@ -369,10 +369,58 @@ void checkRFID() {
 
             }
       while(after || emerg){
-        if(m){
+        status = nfc.requestTag(MF1_REQIDL, data);
+        if (status == MI_OK) {
+          status = nfc.antiCollision(data);
+          memcpy(serial, data, 5);
+          nfc.selectTag(serial);
+          nfc.haltTag();
           Serial.println("It may be in Emergency or Get from the Server");
-          m = 0;
+          //
+            if(memcmp(serial, mohamedTag, 4) == 0) {
+              Serial.println("Tag verified as Mohamed's RFID.");
+              rfidVerified = true;
+              convertedValue="";
+              for (int i = 0; i < sizeof(mohamedTag) -1; i++) {
+                if (i > 0) {
+                  convertedValue += " ";
+                }
+                convertedValue += String(mohamedTag[i], HEX);
+              }
+              // Compare the converted value with the compareValue
+              if (compareValue.indexOf(convertedValue) != -1) {
+                Serial.println("Match found");
+                Serial.println("This Driver is banned!");
+                //message ="1, Naol with RFID :  "+String(mohamedTag[0],HEX)+" "+ String(mohamedTag[1],HEX)+" "+String(mohamedTag[2],HEX)+" "+String(mohamedTag[3],HEX)+" Tries to Start the car. \n\r"; // Message content
+              } else {
+                Serial.println("No match found \n "+convertedValue+"\n");
+                if(on){
+                  //message ="1, Naol with RFID : "+String(mohamedTag[0],HEX)+" "+ String(mohamedTag[1],HEX)+" "+String(mohamedTag[2],HEX)+" "+String(mohamedTag[3],HEX)+" Started the car. \n\r"; // Message content
+                  emergecyabort =1;
+                  digitalWrite(7, LOW);
+                  delay(800);
+                  digitalWrite(7, HIGH);
+                  on = 0;
+                  delay(100);
+                  //fingerlight=0;
+                }else{
+                  if(!cutted){
+                    emergecyabort =1;
+                    digitalWrite(8, LOW);
+                    delay(1000);
+                    digitalWrite(8, HIGH);
+                    on = 1;
+                    //message ="1, Naol with RFID : "+String(mohamedTag[0],HEX)+" "+ String(mohamedTag[1],HEX)+" "+String(mohamedTag[2],HEX)+" "+String(mohamedTag[3],HEX)+" Stoped the car. \n\r"; // Message content
+                    delay(100);
+                  }
+                }
+
+              }
+            }
+            //
+          
         }
+        
         yield();
         //return;
         }
