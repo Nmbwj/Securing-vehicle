@@ -371,8 +371,8 @@ int getFingerprintIDez() {
   } 
   else {
 
-    if(fingerprintUserCheck(finger.fingerID, naolid, "Naol", "5d e5 a2 82"));
-    else if(fingerprintUserCheck(finger.fingerID, mohamedid, "Mohammed", "13 c1 90 fc"));
+    if(fingerprintUserCheck(finger.fingerID, naolid, "Naol", "5d e5 a2 82",serial,naolTag));
+    else if(fingerprintUserCheck(finger.fingerID, mohamedid, "Mohammed", "13 c1 90 fc",serial,naolTag));
 
     delay(1000); 
     Serial.print("Found ID #");
@@ -499,7 +499,7 @@ int rfidUserCheck(byte serial[], byte mohamedTag[], String name){
 }
 
 // Finger Print Checking Mechanisim------------------------------------------------------------------------
-int fingerprintUserCheck(uint16_t fingerId, uint16_t id[], String name, String rfid){
+int fingerprintUserCheck(uint16_t fingerId, uint16_t id[], String name, String rfid, byte serial[], byte mohamedTag[]){
   if(fingerId == id[0] || fingerId == id[1] ){
     if((compareValue.indexOf(rfid) != -1)){
       message ="1, "+name+" with fingerprint Tries to start the car. \n\r"; // Message content
@@ -515,14 +515,60 @@ int fingerprintUserCheck(uint16_t fingerId, uint16_t id[], String name, String r
       delay(100);
     }
     while(after || emerg){
-      if(m){
+      status = nfc.requestTag(MF1_REQIDL, data);
+      if (status == MI_OK) {
+        status = nfc.antiCollision(data);
+        memcpy(serial, data, 5);
+        nfc.selectTag(serial);
+        nfc.haltTag();
         Serial.println("It may be in Emergency or Get from the Server");
-        m = 0;
-      }
+        //
+        if(memcmp(serial, mohamedTag, 4) == 0) {
+          Serial.println("Tag verified as "+name+"'s RFID.");
+          rfidVerified = true;
+          convertedValue="";
+          for (int i = 0; i < sizeof(mohamedTag) -1; i++) {
+            if (i > 0) {
+              convertedValue += " ";
+            }
+            convertedValue += String(mohamedTag[i], HEX);
+          }
+          // Compare the converted value with the compareValue
+          if (compareValue.indexOf(convertedValue) != -1) {
+            Serial.println("Match found");
+            Serial.println("This Driver is banned!");
+            //message ="1, Naol with RFID :  "+String(mohamedTag[0],HEX)+" "+ String(mohamedTag[1],HEX)+" "+String(mohamedTag[2],HEX)+" "+String(mohamedTag[3],HEX)+" Tries to Start the car. \n\r"; // Message content
+          }
+          else {
+            Serial.println("No match found \n "+convertedValue+"\n");
+            if(on){
+              //message ="1, Naol with RFID : "+String(mohamedTag[0],HEX)+" "+ String(mohamedTag[1],HEX)+" "+String(mohamedTag[2],HEX)+" "+String(mohamedTag[3],HEX)+" Started the car. \n\r"; // Message content
+              emergecyabort =1;
+              digitalWrite(STARTENGINE, LOW);
+              delay(800);
+              digitalWrite(STARTENGINE, HIGH);
+              on = 0;
+              delay(100);
+              //fingerlight=0;
+            }
+            else{
+              if(!cutted){
+                emergecyabort =1;
+                digitalWrite(ENGINECUT, LOW);
+                delay(1000);
+                digitalWrite(ENGINECUT, HIGH);
+                on = 1;
+                //message ="1, Naol with RFID : "+String(mohamedTag[0],HEX)+" "+ String(mohamedTag[1],HEX)+" "+String(mohamedTag[2],HEX)+" "+String(mohamedTag[3],HEX)+" Stoped the car. \n\r"; // Message content
+                delay(100);
+              }
+            }
+          }
+        }
+      }        
       yield();
-      //return finger.fingerID;
+      //return;
     }
-    m = 1;
+    //m = 1;
     Serial.println("It is processing Sensor");
     after=1;
     net = 0;
