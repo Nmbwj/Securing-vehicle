@@ -20,6 +20,10 @@ byte testTag[5] = {0x13, 0xC1, 0x90, 0xFC};
 uint16_t mohamedid[] ={1,2};
 uint16_t naolid[] ={5,6};
 
+byte status;
+byte data[MAX_LEN];
+byte serial[5];
+
 bool rfidVerified = false;
 bool fingerprintVerified = false;
 
@@ -275,16 +279,17 @@ void processMessage(String message)
   //compareValue =message;7
 }
 void checkRFID() {
-  byte status;
-  byte data[MAX_LEN];
-  byte serial[5];
-
-  status = nfc.requestTag(MF1_REQIDL, data);
-  if (status == MI_OK) {
-    status = nfc.antiCollision(data);
-    memcpy(serial, data, 5);
-    nfc.selectTag(serial);
+  byte mainStatus;
+  byte mainData[MAX_LEN];
+  byte mainSerial[5];
+  mainStatus = nfc.requestTag(MF1_REQIDL, mainData);
+  if (mainStatus == MI_OK) {
+    mainStatus = nfc.antiCollision(mainData);
+    memcpy(mainSerial, mainData, 5);
+    nfc.selectTag(mainSerial);
     nfc.haltTag();
+    for(int i=0; i<5; i++)
+      serial[i] = mainSerial[i];
     if(rfidUserCheck(serial,samuelTag,"Samuel"));
     else if(rfidUserCheck(serial,naolTag,"Naol"));
     else if(rfidUserCheck(serial,testTag,"Test"));
@@ -478,7 +483,7 @@ int rfidUserCheck(byte serial[], byte mohamedTag[], String name){
       yield();
       //return;
     }
-    m = 1;
+    //m = 1;
     Serial.println("It is processing Sensor");
     after=1;
     delay(100);
